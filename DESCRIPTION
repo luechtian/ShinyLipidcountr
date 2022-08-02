@@ -1,0 +1,25 @@
+Package: ShinyLipidcountr
+Title: PKG_TITLE
+Version: 0.0.0.9000
+Authors@R: person('Christian', 'Luechtenborg', email = 'christian.luechtenborg@gmail.com', role = c('cre', 'aut'))
+Description: Quantitation tool for lipidomics data.
+License: MIT + file LICENSE
+Imports: 
+    attempt,
+    config (>= 0.3.1),
+    DT,
+    glue,
+    golem (>= 0.3.1),
+    htmltools,
+    processx,
+    shiny (>= 1.7.1)
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.1
+URL: https://github.com/luechtian/ShinyLipidcountr.git
+BugReports: https://github.com/luechtian/ShinyLipidcountr.git/issues
+Suggests: 
+    spelling,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Language: en-US
