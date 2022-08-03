@@ -19,8 +19,8 @@
 ## to change the name in the app_sys() function in app_config.R /!\
 ##
 golem::fill_desc(
-  pkg_name = "ShinyLipidcountr", # The Name of the package containing the App
-  pkg_title = "PKG_TITLE", # The Title of the package containing the App
+  pkg_name = "shinylipidcountr", # The Name of the package containing the App
+  pkg_title = "ShinyLipidcountr", # The Title of the package containing the App
   pkg_description = "Quantitation tool for lipidomics data.", # The Description of the package containing the App
   author_first_name = "Christian", # Your First Name
   author_last_name = "Luechtenborg", # Your Last Name

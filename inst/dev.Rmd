@@ -1,0 +1,475 @@
+---
+title: "Dev page for Shiny"
+editor_options:
+  chunk_output_type: console
+output:
+  html_document:
+    df_print: paged
+---
+
+
+```{r load packages & functions, message=FALSE, warning=FALSE}
+library(dplyr)
+library(lipidcountr)
+source("C:/Users/christian/R projects/ShinyApp LipidView Wrangler/LipidView Wrangler/Wrangler/R/read_lipidview_files.R")
+source("C:/Users/christian/R projects/ShinyApp LipidView Wrangler/LipidView Wrangler/Wrangler/R/LipidView_analysis_functional_version.R")
+
+read_metadata <- function(path, pattern = "metadata"){
+  list.files(path = path, pattern = pattern, full.names = T) %>%
+    #readr::read_csv(col_types = readr::cols()) %>% 
+    #->>> kann Sonderzeichen (zB µ) nicht lesen! Fehlerhafte Excelfiles die Folge.
+    read.csv() %>% 
+    janitor::clean_names()
+}
+
+# modified function for new "blank"-row in metadata-file
+join_metadata <- function(raw_data, metadata){
+  
+  # Extract sample input [ul] from meta data
+  sample_input <- metadata %>%
+    dplyr::filter(class == "sample input") %>%
+    dplyr::select(-class, -rf_values) %>%
+    tidyr::pivot_longer(everything(),
+                        names_to = "sample",
+                        values_to = "sample_input") %>%
+    dplyr::mutate(sample_input = as.numeric(sample_input))
+  
+  sample_groups <- metadata %>%
+    dplyr::filter(class == "group") %>%
+    dplyr::select(-class, -rf_values) %>%
+    tidyr::pivot_longer(everything(),
+                        names_to = "sample",
+                        values_to = "group")
+  
+  # Extract internal standard concentrations [pmol]
+  # and response factors (rf-values) from meta data
+  standard_input <- metadata %>%
+    dplyr::filter(class != "sample input",
+                  class != "group",
+                  class != "blank") %>%
+    tidyr::pivot_longer(
+      cols = c(-class, -rf_values),
+      names_to = "sample",
+      values_to = "standard_input") %>%
+    dplyr::mutate(standard_input = as.numeric(standard_input))
+  
+  # Join metadata
+  joined_metadata <- standard_input %>%
+    dplyr::left_join(sample_input, by = "sample") %>%
+    dplyr::left_join(sample_groups, by = "sample")
+  
+  
+  # Join raw_data and metadata and keep order for species, sample and groups
+  dplyr::left_join(raw_data, joined_metadata, by = c("class", "sample")) %>%
+    dplyr::mutate(species = forcats::fct_inorder(species, ordered = NA),
+           sample = forcats::fct_inorder(sample, ordered = NA),
+           group = forcats::fct_inorder(group, ordered = NA),
+           sample_name = stringr::str_remove(sample, "sample_"),
+           sample_name = paste(sample_name, "-", group),
+           sample_name = forcats::fct_inorder(sample_name, ordered = NA))
+    
+}
+
+# modified function, if D5-TAG 17:0/17:1/17:0 is not the internal standard
+join_istd_means <- function(raw_data){
+  
+  # Extract the intensities of internal standards and
+  # return the mean of IS-intensities to the rawdata
+  is_data <- raw_data %>%
+    dplyr::filter(stringr::str_detect(species, "IS")) %>%
+    dplyr::group_by(class, sample) %>%
+    dplyr::summarise(is_intensity = mean(intensity), .groups = "drop")
+
+  raw_data %>%
+    dplyr::left_join(is_data, by = c("class", "sample")) %>%
+    dplyr::filter(!stringr::str_detect(species, "IS"))
+  
+}
+```
+
+
+```{r}
+path <- "C:/Users/christian/R projects/LipidView_analysis/data/AMV/220712"
+rawdata <- read_lipidview_files(path)
+metadata <- read_metadata(path, pattern = "metadatatest")
+```
+
+
+```{r}
+data <- rawdata %>% 
+  join_istd_means() %>%
+  join_metadata(metadata) %>%
+  impute_rf() %>% 
+  apply_rf() %>%
+  intensity_to_pmol() %>%
+  #blank_substraction(blank = "kon_a") %>%
+  multi_blank_sub(meta_data = metadata) %>% 
+  #mutate(pmol_corr = pmol) %>% 
+  #combine_dag_species() %>%
+  pmol_to_uM() %>%
+  sum_same_species()
+
+# removes "x" in column "sample" & "sample_name". If sample names start with a 
+# numeric, janitor puts automatically "x" before the sample name.
+data <- data %>% mutate(sample = stringr::str_remove(sample, "x"),
+                        sample = forcats::fct_inorder(species, ordered = NA),
+                        sample_name = stringr::str_remove(sample_name, "x"),
+                        sample_name = forcats::fct_inorder(species, ordered = NA))
+```
+
+```{r}
+rawdata %>% 
+  select(class, species) %>% 
+  filter(stringr::str_detect(species, "IS")) %>% 
+  unique()
+```
+
+```{r}
+read_lipidxplorer_files <- function(path){
+  
+  readr::read_csv(path, show_col_types = FALSE, na = c("", "None")) %>%
+    janitor::clean_names() %>%
+    dplyr::filter(class != "###") %>%
+    dplyr::select(class, chemical_species, molecular_species, lipid_category,
+                  mass, tidyselect::starts_with("intensity"), 
+                  tidyselect::starts_with("fatty_acid_intensity")) %>%
+    tidyr::pivot_longer(
+      cols = c(-class, -chemical_species, -molecular_species,
+               -lipid_category, -mass),
+      names_to = "sample",
+      values_to = "intensity")
+  
+}
+
+clean_lipidxplorer_files <- function(data){
+  # separate intensities of precursors from intensities of the summed FA's
+  mutate(data, fatty_acid_comp = ifelse(stringr::str_detect(sample, "fatty"),
+                                        "fa_intensity", "intensity"),
+         sample = stringr::str_remove(sample, "fatty_acid_")) %>%
+    tidyr::pivot_wider(id_cols = c(class, chemical_species, molecular_species,
+                                   lipid_category, mass, sample),
+                       names_from = fatty_acid_comp, values_from = intensity,
+                       names_repair = "check_unique") %>%
+    
+    mutate(sample = stringr::str_remove(sample, "intensity_"),
+           sample = stringr::str_remove(sample, "_s_mz_xml"),
+           chemical_species = ifelse(lipid_category == "Internal standard",
+                                     paste0("IS ", chemical_species), 
+                                     chemical_species),
+           molecular_species = ifelse(lipid_category == "Internal standard", 
+                                      paste0("IS ", molecular_species), 
+                                      molecular_species)) %>% 
+    rename(species = chemical_species) %>% 
+    # remove class name from species
+    mutate(species = ifelse(class != species,
+                            stringr::str_remove_all(species, paste0(class, " ")),
+                            species))
+  
+}
+
+path_to_csv <- "C:/Users/christian/Mass_spectrometry/Spektren/QE/220712_XtrIL_AnaMartinVillalba/eval/eval-out.csv"
+
+read_lipidxplorer_files(path_to_csv) %>% 
+  clean_lipidxplorer_files() %>% 
+  rename(scan_name = molecular_species) %>% 
+  select(class, species, scan_name, sample, intensity) %>% 
+  rbind(rawdata)
+```
+
+
+```{r Shinyapp mit nur mit mod_raw.R}
+#### Packages/Functions ----
+library(shiny)
+library(shinydashboard)
+library(DBI)
+library(DT)
+library(rhandsontable)
+library(tidyverse)
+library(janitor)
+
+source("C:/Users/christian/R projects/ShinyApp LipidView Wrangler/LipidView Wrangler/Wrangler/R/read_lipidview_files.R")
+source("C:/Users/christian/R projects/ShinyApp LipidView Wrangler/LipidView Wrangler/Wrangler/R/LipidView_analysis_functional_version.R")
+source("C:/Users/christian/R projects/ShinyApp LipidView Wrangler/LipidView Wrangler/Wrangler/R/mod_raw.R")
+
+#####
+
+ui <- shinyUI({
+  dashboardPage(
+  
+  dashboardHeader(title = "Basic dashboard"),
+  
+  dashboardSidebar(
+    sidebarMenu(
+      menuItem("1 Raw data", tabName = "raw", icon = icon("home"))
+    )
+  ),
+  
+  dashboardBody(
+    tabItems(
+      #---- start-tab content ----
+      tabItem(tabName = "raw",
+              raw_ui("raw")
+      )
+      #---- -tab content ----
+    )
+  )
+)
+})
+
+server <- function(input, output, session) {
+  
+  #---- Raw data ----
+  raw <- raw_server("raw")
+}
+
+shinyApp(ui, server)
+```
+
+
+```{r Rename columns in dataframe}
+require(shiny)
+require(dplyr)
+
+server <-  function(input, output) {
+
+  dataa <- reactive({
+    table1 <-  
+    lipidcountr::list_txt_files( "C:/Users/christian/R projects/LipidView_analysis/data/AMV/220712") %>%
+      lipidcountr::read_txt_files() %>% 
+      clean_txt_files()
+
+    return(table1)
+  })
+
+  output$contents <- renderDataTable({
+    dataa()      
+  })
+
+  output$renamer <- renderUI({
+    lapply(colnames(dataa()),function(i){
+      textInput(paste0("col_",i),i,i)
+    })
+  })  
+
+
+  DataRename <- reactive({
+    Data <- dataa()
+    DataNew1<-Data
+
+    for ( i in names(input) ){
+
+      if(grepl(pattern = "col_",i)){
+        colnames(DataNew1)[which(colnames(DataNew1)==substr(i,5,nchar(i)))]=input[[i]]
+      }
+
+    }
+
+    return(DataNew1)
+  })
+
+  output$rename <- renderDataTable({
+    DataRename()      
+  })
+
+
+}
+
+ui <- shinyUI({
+  navbarPage("Dynamic Rename",
+             tabPanel("Data",
+                      fluidPage(
+                        titlePanel("change column names"),
+
+                        dataTableOutput('contents'))
+             ),
+             tabPanel("Variables",
+                      fluidPage(
+                        sidebarLayout(
+                          sidebarPanel(
+
+                            uiOutput("renamer")
+                          ),
+                          mainPanel(
+                            dataTableOutput("rename")
+                          )
+                        )
+                      )
+             )
+
+
+  )
+
+
+
+})
+
+shinyApp(ui = ui, server = server)
+```
+
+
+```{r Delete columns from LipidXplorer output}
+#### Packages/Functions ----
+library(shiny)
+library(shinydashboard)
+library(DBI)
+library(DT)
+library(rhandsontable)
+library(tidyverse)
+library(janitor)
+source("C:/Users/christian/R projects/ShinyApp LipidView Wrangler/LipidView Wrangler/Wrangler/R/read_lipidview_files.R")
+source("C:/Users/christian/R projects/ShinyApp LipidView Wrangler/LipidView Wrangler/Wrangler/R/LipidView_analysis_functional_version.R")
+#####
+
+ui <- shinyUI({
+  fluidPage(
+    fileInput("files", "LipidView raw data", 
+              multiple = TRUE, accept = c(".txt", ".csv"),
+              placeholder = "raw data"),
+    tableOutput("DFTable1"),
+    
+    fileInput(inputId = "rawFile", label="LipidXplorer raw data"), 
+    uiOutput("selectColumn"),
+    actionButton(inputId = "Remove", label = "Remove"),
+    tableOutput("DFTable")
+  )
+})
+
+server = function(input, output, session){
+  
+  raw <- eventReactive(input$files,{
+    files <- reactiveValues(data = NULL)
+    
+    files <- input$files$datapath
+    
+    filenames <- input$files$name %>%
+      purrr::map(name_lipid_file) %>%
+      unlist()
+    
+    names(files) <- names(filenames)
+    ##### main data #####
+    data <- files %>%
+      read_txt_files() %>%
+      clean_txt_files() %>%
+      tidyr::pivot_longer(
+        cols = c(-species, -class, -scan_name),
+        names_to = "sample",
+        values_to = "intensity")
+  })
+  
+  output$DFTable1 <- renderTable(raw() %>% head())
+      
+  # initiate a reactive value
+  df <- reactiveValues(data = NULL)
+  removecolumn <- function(df, nameofthecolumn){dplyr::select(df, -(all_of(nameofthecolumn)))}
+  
+  inputData <- reactive({
+    inFile <- input$rawFile
+    if (is.null(inFile)){return(NULL)}
+    data = readr::read_csv(inFile$datapath,
+                    show_col_types = FALSE, 
+                    na = c("", "None")) %>%
+      janitor::clean_names() %>%
+      filter(class != "###")
+    df$data = data
+    return(data)
+  })
+  
+  # update column names
+  output$selectColumn <- renderUI({
+    shiny::req(inputData())
+    selectInput(inputId = "selectColumn",
+                label = "Remove selected sample(s)",
+                multiple = TRUE,
+                choices = names(inputData())
+    )
+  })
+  
+  ##df$data = reactive(inputData())
+  
+  observeEvent(input$Remove, {
+    df$data <- removecolumn(df$data, input$selectColumn)
+  })
+  
+  # show result
+  output$DFTable <- renderTable({
+    df$data %>% head()
+  })
+  
+}
+
+shinyApp(ui, server)
+```
+
+
+```{r tab switching button}
+library(shiny)
+library(shinydashboard)
+
+ui <- dashboardPage(
+  dashboardHeader(title = "Simple tabs"),
+  dashboardSidebar(
+    sidebarMenu(
+      id = "tabs",
+      menuItem("Dashboard", tabName = "dashboard", startExpanded = TRUE,
+               shinydashboard::menuSubItem("intensity to pmol",
+                                           tabName = "pmol"),
+               shinydashboard::menuSubItem("Blank subtraction",
+                                           tabName = "blank"))
+    )
+    
+  ),
+  dashboardBody(
+    tabItems(
+      tabItem(tabName = "pmol",
+              h2("pmol tab content"),
+              actionButton('switchtab', 'Switch tab')
+      ),
+      tabItem(tabName = "blank",
+              h2("blank tab content")
+      )
+    )
+  )
+)
+
+server <- function(input, output, session) {
+  observeEvent(input$switchtab, {
+    updateTabItems(session, "tabs", "blank")
+  })
+}
+
+shinyApp(ui, server)
+```
+
+
+```{r tab switching button inside modules}
+library(shiny)
+
+moduleUI <- function(id) {
+  ns <- NS(id)
+  uiOutput(ns("my_link"))
+}
+
+module <- function(input, output, session, number, parent) {
+  output$my_link <- renderUI({ 
+    actionLink(session$ns("link"), paste0("This is a link to ", number))
+  })
+  
+  observeEvent(input$link,{
+    updateSelectInput(session = parent,"selectInput",selected = number)  ### use parent session
+  })
+}
+
+ui <-  fluidPage(
+  selectInput("selectInput","Choose one option",choices=seq(1,10),selected=1),
+  moduleUI("5"),
+  moduleUI("10")
+)
+
+server <- function(session,input, output) {
+  callModule(module = module, id = "5", 5, parent = session) ### pass session information
+  callModule(module = module, id = "10", 10, parent = session) ### pass session information
+}
+
+shinyApp(ui = ui, server = server)
+```
+

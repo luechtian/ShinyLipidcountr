@@ -1,5 +1,5 @@
 default:
-  golem_name: ShinyLipidcountr
+  golem_name: shinylipidcountr
   golem_version: 0.0.0.9000
   app_prod: no
 production:
