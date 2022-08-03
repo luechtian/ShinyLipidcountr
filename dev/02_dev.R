@@ -24,8 +24,8 @@ golem::add_module( name = "3_calc" ) # Name of the module
 
 ## Add helper functions ----
 ## Creates fct_* and utils_*
-golem::add_fct( "lipidxplorer_part_1", module = "2_raw" )
-golem::add_utils( "pipe" )
+golem::add_fct( "lipidxplorer_part_1", module = "1_raw" )
+golem::add_utils( "check_names", module = "1_raw"  )
 
 ## External resources
 ## Creates .js and .css files at inst/app/www

@@ -1,0 +1,307 @@
+---
+title: "Dev page for Shiny"
+editor_options:
+  chunk_output_type: console
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r Shinyapp mit nur mit mod_raw.R}
+#### Packages/Functions ----
+library(shiny)
+library(shinydashboard)
+library(DBI)
+library(DT)
+library(rhandsontable)
+library(tidyverse)
+library(janitor)
+
+source("C:/Users/christian/R projects/ShinyApp LipidView Wrangler/LipidView Wrangler/Wrangler/R/read_lipidview_files.R")
+source("C:/Users/christian/R projects/ShinyApp LipidView Wrangler/LipidView Wrangler/Wrangler/R/LipidView_analysis_functional_version.R")
+source("C:/Users/christian/R projects/ShinyApp LipidView Wrangler/LipidView Wrangler/Wrangler/R/mod_raw.R")
+
+#####
+
+ui <- shinyUI({
+  dashboardPage(
+  
+  dashboardHeader(title = "Basic dashboard"),
+  
+  dashboardSidebar(
+    sidebarMenu(
+      menuItem("1 Raw data", tabName = "raw", icon = icon("home"))
+    )
+  ),
+  
+  dashboardBody(
+    tabItems(
+      #---- start-tab content ----
+      tabItem(tabName = "raw",
+              raw_ui("raw")
+      )
+      #---- -tab content ----
+    )
+  )
+)
+})
+
+server <- function(input, output, session) {
+  
+  #---- Raw data ----
+  raw <- raw_server("raw")
+}
+
+shinyApp(ui, server)
+```
+
+
+```{r Rename columns in dataframe}
+require(shiny)
+require(dplyr)
+
+server <-  function(input, output) {
+
+  dataa <- reactive({
+    table1 <-  
+    lipidcountr::list_txt_files( "C:/Users/christian/R projects/LipidView_analysis/data/AMV/220712") %>%
+      lipidcountr::read_txt_files() %>% 
+      clean_txt_files()
+
+    return(table1)
+  })
+
+  output$contents <- renderDataTable({
+    dataa()      
+  })
+
+  output$renamer <- renderUI({
+    lapply(colnames(dataa()),function(i){
+      textInput(paste0("col_",i),i,i)
+    })
+  })  
+
+
+  DataRename <- reactive({
+    Data <- dataa()
+    DataNew1<-Data
+
+    for ( i in names(input) ){
+
+      if(grepl(pattern = "col_",i)){
+        colnames(DataNew1)[which(colnames(DataNew1)==substr(i,5,nchar(i)))]=input[[i]]
+      }
+
+    }
+
+    return(DataNew1)
+  })
+
+  output$rename <- renderDataTable({
+    DataRename()      
+  })
+
+
+}
+
+ui <- shinyUI({
+  navbarPage("Dynamic Rename",
+             tabPanel("Data",
+                      fluidPage(
+                        titlePanel("change column names"),
+
+                        dataTableOutput('contents'))
+             ),
+             tabPanel("Variables",
+                      fluidPage(
+                        sidebarLayout(
+                          sidebarPanel(
+
+                            uiOutput("renamer")
+                          ),
+                          mainPanel(
+                            dataTableOutput("rename")
+                          )
+                        )
+                      )
+             )
+
+
+  )
+
+
+
+})
+
+shinyApp(ui = ui, server = server)
+```
+
+
+```{r Delete columns from LipidXplorer output}
+#### Packages/Functions ----
+library(shiny)
+library(shinydashboard)
+library(DBI)
+library(DT)
+library(rhandsontable)
+library(tidyverse)
+library(janitor)
+source("C:/Users/christian/R projects/ShinyApp LipidView Wrangler/LipidView Wrangler/Wrangler/R/read_lipidview_files.R")
+source("C:/Users/christian/R projects/ShinyApp LipidView Wrangler/LipidView Wrangler/Wrangler/R/LipidView_analysis_functional_version.R")
+#####
+
+ui <- shinyUI({
+  fluidPage(
+    fileInput("files", "LipidView raw data", 
+              multiple = TRUE, accept = c(".txt", ".csv"),
+              placeholder = "raw data"),
+    tableOutput("DFTable1"),
+    
+    fileInput(inputId = "rawFile", label="LipidXplorer raw data"), 
+    uiOutput("selectColumn"),
+    actionButton(inputId = "Remove", label = "Remove"),
+    tableOutput("DFTable")
+  )
+})
+
+server = function(input, output, session){
+  
+  raw <- eventReactive(input$files,{
+    files <- reactiveValues(data = NULL)
+    
+    files <- input$files$datapath
+    
+    filenames <- input$files$name %>%
+      purrr::map(name_lipid_file) %>%
+      unlist()
+    
+    names(files) <- names(filenames)
+    ##### main data #####
+    data <- files %>%
+      read_txt_files() %>%
+      clean_txt_files() %>%
+      tidyr::pivot_longer(
+        cols = c(-species, -class, -scan_name),
+        names_to = "sample",
+        values_to = "intensity")
+  })
+  
+  output$DFTable1 <- renderTable(raw() %>% head())
+      
+  # initiate a reactive value
+  df <- reactiveValues(data = NULL)
+  removecolumn <- function(df, nameofthecolumn){dplyr::select(df, -(all_of(nameofthecolumn)))}
+  
+  inputData <- reactive({
+    inFile <- input$rawFile
+    if (is.null(inFile)){return(NULL)}
+    data = readr::read_csv(inFile$datapath,
+                    show_col_types = FALSE, 
+                    na = c("", "None")) %>%
+      janitor::clean_names() %>%
+      filter(class != "###")
+    df$data = data
+    return(data)
+  })
+  
+  # update column names
+  output$selectColumn <- renderUI({
+    shiny::req(inputData())
+    selectInput(inputId = "selectColumn",
+                label = "Remove selected sample(s)",
+                multiple = TRUE,
+                choices = names(inputData())
+    )
+  })
+  
+  ##df$data = reactive(inputData())
+  
+  observeEvent(input$Remove, {
+    df$data <- removecolumn(df$data, input$selectColumn)
+  })
+  
+  # show result
+  output$DFTable <- renderTable({
+    df$data %>% head()
+  })
+  
+}
+
+shinyApp(ui, server)
+```
+
+
+```{r tab switching button}
+library(shiny)
+library(shinydashboard)
+
+ui <- shinyUI({
+  dashboardPage(
+  dashboardHeader(title = "Simple tabs"),
+  dashboardSidebar(
+    sidebarMenu(
+      id = "tabs",
+      menuItem("Dashboard", tabName = "dashboard", startExpanded = TRUE,
+               shinydashboard::menuSubItem("intensity to pmol",
+                                           tabName = "pmol"),
+               shinydashboard::menuSubItem("Blank subtraction",
+                                           tabName = "blank"))
+    )
+    
+  ),
+  dashboardBody(
+    tabItems(
+      tabItem(tabName = "pmol",
+              h2("pmol tab content"),
+              actionButton('switchtab', 'Switch tab')
+      ),
+      tabItem(tabName = "blank",
+              h2("blank tab content")
+      )
+    )
+  )
+)
+})
+
+server <- function(input, output, session) {
+  observeEvent(input$switchtab, {
+    updateTabItems(session, "tabs", "blank")
+  })
+}
+
+shinyApp(ui, server)
+```
+
+
+```{r tab switching button inside modules}
+library(shiny)
+
+moduleUI <- function(id) {
+  ns <- NS(id)
+  uiOutput(ns("my_link"))
+}
+
+module <- function(input, output, session, number, parent) {
+  output$my_link <- renderUI({ 
+    actionLink(session$ns("link"), paste0("This is a link to ", number))
+  })
+  
+  observeEvent(input$link,{
+    updateSelectInput(session = parent,"selectInput",selected = number)  ### use parent session
+  })
+}
+
+ui <-  fluidPage(
+  selectInput("selectInput","Choose one option",choices=seq(1,10),selected=1),
+  moduleUI("5"),
+  moduleUI("10")
+)
+
+server <- function(session,input, output) {
+  callModule(module = module, id = "5", 5, parent = session) ### pass session information
+  callModule(module = module, id = "10", 10, parent = session) ### pass session information
+}
+
+shinyApp(ui = ui, server = server)
+```
+

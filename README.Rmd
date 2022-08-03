@@ -16,9 +16,10 @@ knitr::opts_chunk$set(
 # ShinyLipidcountr
 
 <!-- badges: start -->
+[![Codecov test coverage](https://codecov.io/gh/luechtian/ShinyLipidcountr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/luechtian/ShinyLipidcountr?branch=main)
 <!-- badges: end -->
 
-The goal of ShinyLipidcountr is to ...
+The goal of ShinyLipidcountr is to build an excel workbook that contains quantified lipidomics data and graphs. The shiny app is able to read LipidView and LipidXplorer report files to calculate concentrations of various lipid species.
 
 ## Installation
 
@@ -34,7 +35,7 @@ devtools::install_github("luechtian/ShinyLipidcountr")
 This is a basic example which shows you how to solve a common problem:
 
 ```{r example}
-library(ShinyLipidcountr)
+#library(ShinyLipidcountr)
 ## basic example code
 ```
 

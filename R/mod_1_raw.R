@@ -72,7 +72,7 @@ mod_1_raw_server <- function(id){
         ##### main data #####
         data <- files %>%
           read_txt_files() %>%
-          clean_txt_files() %>%
+          clean_txt_files(clean_samples = FALSE) %>%
           tidyr::pivot_longer(
             cols = c(-species, -class, -scan_name),
             names_to = "sample",
@@ -85,7 +85,7 @@ mod_1_raw_server <- function(id){
 
         data <- input$files$datapath %>%
           read_lipidxplorer_files() %>%
-          clean_lipidxplorer_files()
+          clean_lipidxplorer_files(clean_samples = FALSE)
       }
 
       # LV / LX files combined
@@ -95,7 +95,7 @@ mod_1_raw_server <- function(id){
         ## LipidXplorer files
         lx_data <-  input$file_lx$datapath %>%
           read_lipidxplorer_files() %>%
-          clean_lipidxplorer_files() %>%
+          clean_lipidxplorer_files(clean_samples = FALSE) %>%
           dplyr::rename(scan_name = molecular_species) %>%
           dplyr::select(class, species, scan_name, sample, intensity)
 
@@ -112,11 +112,15 @@ mod_1_raw_server <- function(id){
         ##### main data #####
         lv_data <- files %>%
           read_txt_files() %>%
-          clean_txt_files() %>%
+          clean_txt_files(clean_samples = FALSE) %>%
           tidyr::pivot_longer(
             cols = c(-species, -class, -scan_name),
             names_to = "sample",
             values_to = "intensity")
+
+        # If samples names from LipidView and LipidXplorer are not the same
+        # check_sample_names-function will stop the process!
+        check_sample_names(lv_data, lx_data)
 
         data <- rbind(lv_data, lx_data)
       }

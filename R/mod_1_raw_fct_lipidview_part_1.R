@@ -17,7 +17,7 @@
 #' @export
 #'
 #' @examples
-#' read_lipidview_files(system.file("extdata", package = "lipidcountr"))
+#' read_lipidview_files(system.file("extdata", package = "shinylipidcountr"))
 read_lipidview_files <- function(path, format = "long"){
 
   data <- path %>%
@@ -46,7 +46,7 @@ read_lipidview_files <- function(path, format = "long"){
 #' @export
 #'
 #' @examples
-#' list_txt_files(system.file("extdata", package = "lipidcountr"))
+#' list_txt_files(system.file("extdata", package = "shinylipidcountr"))
 list_txt_files <- function(path){
 
   list.files(path, pattern = ".txt", full.names = TRUE) %>%
@@ -113,7 +113,7 @@ name_lipid_file <- function(file, names = lipid_classes){
 #' @examples
 #' read_txt_files(system.file("extdata",
 #'                             "yymmdd_XtrIL_ExampleData_SM.txt",
-#'                             package = "lipidcountr"))
+#'                             package = "shinylipidcountr"))
 read_txt_files <- function(files){
 
   suppressWarnings(
@@ -131,30 +131,52 @@ read_txt_files <- function(files){
 # clean_txt_files---------------------------------------------------------------
 #' Clean up of LipidView txt.files
 #'
-#' @param files tibble
+#' @param rawdata tibble
+#' @param clean_samples logical. TRUE activates janitor::clean_names() for samples
+#' * if TRUE: Default. "Sample 1" -> "sample_1" or "SampleOne" -> "sample_one".
+#' But "Sample1" -> "sample1"!
+#'
+#' * if FALSE: Sample name remains untouched.
 #'
 #' @return tibble
 #' @export
 #'
-clean_txt_files <- function(files){
+clean_txt_files <- function(rawdata, clean_samples = TRUE){
 
   # General clean up of the LipidView dataframe:
   ## Get rid off unnecessary columns and strings, rename columns
-  data <- files %>% janitor::clean_names()
+  if(clean_samples == TRUE){
 
-  data %>%
-    dplyr::filter(!stringr::str_detect(sample_name, "Sample ID")) %>%
-    dplyr::select(-sample_name, -x2, -x3, -x4) %>%
-    dplyr::rename("species" = x5,
-                  "scan_name" = x6) %>%
-    dplyr::mutate(species = stringr::str_remove_all(species, "\\+NH4"),
-                  species = ifelse(
-                    class != species,
-                    stringr::str_remove_all(species, paste0(class, " ")),
-                    species
-                  ),
-                  scan_name = stringr::str_remove(scan_name, "\\(-FA "),
-                  scan_name = stringr::str_remove(scan_name, "\\)"),
-                  scan_name = stringr::str_remove(scan_name, "\\("))
+    janitor::clean_names(rawdata) %>%
+      dplyr::filter(!stringr::str_detect(sample_name, "Sample ID")) %>%
+      dplyr::select(-sample_name, -x2, -x3, -x4) %>%
+      dplyr::rename("species" = x5,
+                    "scan_name" = x6) %>%
+      dplyr::mutate(species = stringr::str_remove_all(species, "\\+NH4"),
+                    species = ifelse(
+                      class != species,
+                      stringr::str_remove_all(species, paste0(class, " ")),
+                      species),
+                    scan_name = stringr::str_remove(scan_name, "\\(-FA "),
+                    scan_name = stringr::str_remove(scan_name, "\\)"),
+                    scan_name = stringr::str_remove(scan_name, "\\("))
+
+  } else if (clean_samples == FALSE){
+
+    rawdata %>%
+      dplyr::filter(!stringr::str_detect(`Sample Name`, "Sample ID")) %>%
+      dplyr::select(-`Sample Name`, -...2, -...3, -...4) %>%
+      dplyr::rename("species" = ...5,
+                    "scan_name" = ...6) %>%
+      dplyr::mutate(species = stringr::str_remove_all(species, "\\+NH4"),
+                    species = ifelse(
+                      class != species,
+                      stringr::str_remove_all(species, paste0(class, " ")),
+                      species),
+                    scan_name = stringr::str_remove(scan_name, "\\(-FA "),
+                    scan_name = stringr::str_remove(scan_name, "\\)"),
+                    scan_name = stringr::str_remove(scan_name, "\\("))
+
+  }
 
 }
