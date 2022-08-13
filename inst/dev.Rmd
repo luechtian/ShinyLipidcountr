@@ -9,101 +9,28 @@ output:
 
 
 ```{r load packages & functions, message=FALSE, warning=FALSE}
+devtools::load_all()
 library(dplyr)
-library(lipidcountr)
-source("C:/Users/christian/R projects/ShinyApp LipidView Wrangler/LipidView Wrangler/Wrangler/R/read_lipidview_files.R")
-source("C:/Users/christian/R projects/ShinyApp LipidView Wrangler/LipidView Wrangler/Wrangler/R/LipidView_analysis_functional_version.R")
-
-read_metadata <- function(path, pattern = "metadata"){
-  list.files(path = path, pattern = pattern, full.names = T) %>%
-    #readr::read_csv(col_types = readr::cols()) %>% 
-    #->>> kann Sonderzeichen (zB µ) nicht lesen! Fehlerhafte Excelfiles die Folge.
-    read.csv() %>% 
-    janitor::clean_names()
-}
-
-# modified function for new "blank"-row in metadata-file
-join_metadata <- function(raw_data, metadata){
-  
-  # Extract sample input [ul] from meta data
-  sample_input <- metadata %>%
-    dplyr::filter(class == "sample input") %>%
-    dplyr::select(-class, -rf_values) %>%
-    tidyr::pivot_longer(everything(),
-                        names_to = "sample",
-                        values_to = "sample_input") %>%
-    dplyr::mutate(sample_input = as.numeric(sample_input))
-  
-  sample_groups <- metadata %>%
-    dplyr::filter(class == "group") %>%
-    dplyr::select(-class, -rf_values) %>%
-    tidyr::pivot_longer(everything(),
-                        names_to = "sample",
-                        values_to = "group")
-  
-  # Extract internal standard concentrations [pmol]
-  # and response factors (rf-values) from meta data
-  standard_input <- metadata %>%
-    dplyr::filter(class != "sample input",
-                  class != "group",
-                  class != "blank") %>%
-    tidyr::pivot_longer(
-      cols = c(-class, -rf_values),
-      names_to = "sample",
-      values_to = "standard_input") %>%
-    dplyr::mutate(standard_input = as.numeric(standard_input))
-  
-  # Join metadata
-  joined_metadata <- standard_input %>%
-    dplyr::left_join(sample_input, by = "sample") %>%
-    dplyr::left_join(sample_groups, by = "sample")
-  
-  
-  # Join raw_data and metadata and keep order for species, sample and groups
-  dplyr::left_join(raw_data, joined_metadata, by = c("class", "sample")) %>%
-    dplyr::mutate(species = forcats::fct_inorder(species, ordered = NA),
-           sample = forcats::fct_inorder(sample, ordered = NA),
-           group = forcats::fct_inorder(group, ordered = NA),
-           sample_name = stringr::str_remove(sample, "sample_"),
-           sample_name = paste(sample_name, "-", group),
-           sample_name = forcats::fct_inorder(sample_name, ordered = NA))
-    
-}
-
-# modified function, if D5-TAG 17:0/17:1/17:0 is not the internal standard
-join_istd_means <- function(raw_data){
-  
-  # Extract the intensities of internal standards and
-  # return the mean of IS-intensities to the rawdata
-  is_data <- raw_data %>%
-    dplyr::filter(stringr::str_detect(species, "IS")) %>%
-    dplyr::group_by(class, sample) %>%
-    dplyr::summarise(is_intensity = mean(intensity), .groups = "drop")
-
-  raw_data %>%
-    dplyr::left_join(is_data, by = c("class", "sample")) %>%
-    dplyr::filter(!stringr::str_detect(species, "IS"))
-  
-}
 ```
 
 
 ```{r}
-path <- "C:/Users/christian/R projects/LipidView_analysis/data/AMV/220712"
-rawdata <- read_lipidview_files(path)
-metadata <- read_metadata(path, pattern = "metadatatest")
+path <- system.file("extdata", package = "shinylipidcountr")
+
+rawdata <- read_lipidview_files(path, clean_samples = FALSE)
+
+metadata <- read_metadata(path, clean_samples = FALSE)
 ```
 
 
 ```{r}
 data <- rawdata %>% 
-  join_istd_means() %>%
   join_metadata(metadata) %>%
-  impute_rf() %>% 
-  apply_rf() %>%
+  join_istd_means() %>%
+  #impute_rf() %>% 
+  #apply_rf() %>%
   intensity_to_pmol() %>%
-  #blank_substraction(blank = "kon_a") %>%
-  multi_blank_sub(meta_data = metadata) %>% 
+  blank_sub() %>% 
   #mutate(pmol_corr = pmol) %>% 
   #combine_dag_species() %>%
   pmol_to_uM() %>%
@@ -117,55 +44,6 @@ data <- data %>% mutate(sample = stringr::str_remove(sample, "x"),
                         sample_name = forcats::fct_inorder(species, ordered = NA))
 ```
 
-```{r}
-clean_txt_files <- function(rawdata, clean_samples = TRUE){
-
-  # General clean up of the LipidView dataframe:
-  ## Get rid off unnecessary columns and strings, rename columns
-  if(clean_samples == TRUE){
-    
-    janitor::clean_names(rawdata) %>%
-      dplyr::filter(!stringr::str_detect(sample_name, "Sample ID")) %>%
-      dplyr::select(-sample_name, -x2, -x3, -x4) %>%
-      dplyr::rename("species" = x5,
-                    "scan_name" = x6) %>%
-      dplyr::mutate(species = stringr::str_remove_all(species, "\\+NH4"),
-                    species = ifelse(
-                      class != species,
-                      stringr::str_remove_all(species, paste0(class, " ")),
-                      species),
-                    scan_name = stringr::str_remove(scan_name, "\\(-FA "),
-                    scan_name = stringr::str_remove(scan_name, "\\)"),
-                    scan_name = stringr::str_remove(scan_name, "\\("))
-    
-  } else if (clean_samples == FALSE){
-    
-    rawdata %>%
-      dplyr::filter(!stringr::str_detect(`Sample Name`, "Sample ID")) %>%
-      dplyr::select(-`Sample Name`, -...2, -...3, -...4) %>%
-      dplyr::rename("species" = ...5,
-                    "scan_name" = ...6) %>%
-      dplyr::mutate(species = stringr::str_remove_all(species, "\\+NH4"),
-                    species = ifelse(
-                      class != species,
-                      stringr::str_remove_all(species, paste0(class, " ")),
-                      species),
-                    scan_name = stringr::str_remove(scan_name, "\\(-FA "),
-                    scan_name = stringr::str_remove(scan_name, "\\)"),
-                    scan_name = stringr::str_remove(scan_name, "\\("))
-    
-  }
-
-}
-
-rawdata <- list_txt_files("C:/Users/christian/R projects/LipidView_analysis/data/AMV/220712") %>% 
-  read_txt_files() %>%
-  clean_txt_files(clean_samples = TRUE) %>%
-  tidyr::pivot_longer(
-    cols = c(-species, -class, -scan_name),
-    names_to = "sample",
-    values_to = "intensity")
-```
 
 ```{r}
 read_lipidxplorer_files <- function(path){
@@ -285,8 +163,186 @@ lv_data <- #files %>%
 
 get_samples(lv_data)
 get_samples(lx_data)
+```
 
 
+```{r blank sub}
+blank_sub <- function(raw_data){
+  
+  blank_data <- raw_data %>%
+    dplyr::filter(sample %in% blank) %>% 
+    dplyr::select(class, species, blank = sample, kon_pmol = pmol,
+                  if(any(colnames(raw_data) == "scan_name")){"scan_name"})
+  
+  dplyr::left_join(raw_data, blank_data, by = c("class", "species", "blank",
+                                                if(any(colnames(raw_data) == "scan_name")){"scan_name"})) %>%
+    dplyr::mutate(pmol_corr = pmol - kon_pmol,
+                  pmol_corr = ifelse(pmol_corr < 0, 0, pmol_corr)) %>%
+    dplyr::filter(!sample %in% blank) %>% 
+    dplyr::select(-blank, -kon_pmol)
 
+}
+```
+
+
+```{r}
+raw_data <- system.file("extdata", package = "shinylipidcountr") %>% 
+  list_txt_files() %>% 
+  read_txt_files() %>%
+  clean_txt_files(clean_samples = FALSE) %>%
+  tidyr::pivot_longer(
+    cols = c(-species, -class, -scan_name),
+    names_to = "sample",
+    values_to = "intensity") %>% 
+  join_metadata(metadata) %>%
+  join_istd_means() %>%
+  intensity_to_pmol()
+
+meta_queue <- metadata %>%
+    dplyr::filter(class == "blank") %>%
+    dplyr::select(-class, -rf_values) %>%
+    tidyr::pivot_longer(everything(),
+                        names_to = "sample",
+                        values_to = "blank")
+
+exp_queue <- raw_data %>% 
+  select(sample) %>% 
+  unique()
+
+```
+
+
+```{r}
+## LipidXplorer
+raw_data_lx <-  
+  system.file("extdata", "lx-out.csv", package = "shinylipidcountr") %>% 
+  read_lipidxplorer_files() %>%
+  clean_lipidxplorer_files(clean_samples = FALSE) %>%
+          dplyr::rename(scan_name = molecular_species) %>%
+          dplyr::select(class, species, scan_name, sample, intensity)
+
+## LipidView
+raw_data_lv <- 
+  system.file("extdata", package = "shinylipidcountr") %>% 
+  list_txt_files() %>%
+  read_txt_files() %>%
+  clean_txt_files(clean_samples = FALSE) %>% 
+  tidyr::pivot_longer(
+    cols = c(-species, -class, -scan_name),
+    names_to = "sample",
+    values_to = "intensity")
+
+
+# If samples names from LipidView and LipidXplorer are not the same
+# check_sample_names-function will stop the process!
+check_sample_names(lv_data, lx_data)
+
+data <- rbind(lv_data, lx_data)
+```
+
+
+```{r}
+data_blank <- test_raw_data %>% 
+  join_metadata(test_metadata) %>%
+  join_istd_means() %>%
+  intensity_to_pmol() %>%
+  blank_sub() 
+
+raw_data <- test_raw_data %>% 
+  join_metadata(test_metadata) %>%
+  join_istd_means() %>%
+  intensity_to_pmol() %>%
+  dplyr::filter(!stringr::str_detect(sample, "Kon A")) %>% 
+  blank_sub() 
+
+data_omit_blank <- test_raw_data %>% 
+  join_metadata(test_metadata) %>%
+  join_istd_means() %>%
+  intensity_to_pmol() %>%
+  mutate(pmol_corr = pmol) %>%
+  select(-blank)
+```
+
+
+```{r}
+blank_sub <- function(raw_data){
+
+  blank_data <- raw_data %>%
+    dplyr::filter(sample %in% blank) %>%
+    dplyr::select(class, species, blank = sample, kon_pmol = pmol,
+                  if(any(colnames(raw_data) == "scan_name")){"scan_name"})
+  
+  if(nrow(blank_data) == 0){
+    stop("No blanks in raw data detected. Look for ", 
+         unique(raw_data$blank),
+         " in your raw data.")
+  }
+
+  dplyr::left_join(raw_data, blank_data, by = c("class", "species", "blank",
+                                                if(any(colnames(raw_data) == "scan_name")){"scan_name"})) %>%
+    dplyr::mutate(pmol_corr = pmol - kon_pmol,
+                  pmol_corr = ifelse(pmol_corr < 0, 0, pmol_corr)) %>%
+    dplyr::filter(!sample %in% blank) %>%
+    dplyr::select(-blank, -kon_pmol)
+
+}
+```
+
+
+```{r}
+LipidomicsData <- R6::R6Class("LipidomicsData",
+                              public = list(
+                                rawdata = data.frame(),
+                                metadata = data.frame()
+                              )
+)
+LipidomicsData$set("public", "rawdata", test_raw_data)
+LipidomicsData$set("public", "metadata", test_metadata)
+
+test <- LipidomicsData$new()
+
+test$rawdata <- test_raw_data
+
+test$rawdata <- test_raw_data %>% join_metadata(test$metadata)
+```
+
+
+```{r}
+MyBankAccount <- R6::R6Class(
+  "MyBankAccount",
+  public = list(
+    balance = 0,
+    deposit = function(x = 0){
+      
+      cat("Old balance: ", self$balance, "\n")
+      
+      self$balance <- self$balance + x
+      
+      cat("New balance: ", self$balance)
+      
+      invisible(self$balance)
+    },
+    withdraw = function(x = 0){
+      stopifnot((self$balance - x) >= 0, x >= 0)
+      
+      cat("Old balance: ", self$balance, "\n")
+       
+      self$balance <- self$balance - x
+      
+      cat("New balance: ", self$balance)
+      
+      invisible(self$balance)
+    },
+    initialize = function(balance) {
+      stopifnot(is.numeric(balance), balance >= 0)
+      
+      self$balance <- balance
+    }
+  )
+)
+
+bank <- MyBankAccount$new(balance = 0)
+bank$deposit(10)
+bank$withdraw(10)
 ```
 

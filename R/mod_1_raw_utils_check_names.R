@@ -12,11 +12,11 @@
 #' @examples
 #' get_samples(
 #'
-check_sample_names <- function(data1, data2){
+check_sample_names <- function(data1, data2, ignore = "kon"){
 
   check <- setequal(
-    get_samples(data1),
-    get_samples(data2)
+    get_samples(data1, ignore = ignore),
+    get_samples(data2, ignore = ignore)
   )
 
   not_equal_lv <-

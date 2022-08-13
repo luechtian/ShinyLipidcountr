@@ -15,17 +15,17 @@
 
 ## Dependencies ----
 ## Add one line by package you want to add as dependency
-usethis::use_package( "thinkr" )
+usethis::use_package( "tidyr" )
 
 ## Add modules ----
 ## Create a module infrastructure in R/
 golem::add_module( name = "2_meta" ) # Name of the module
-golem::add_module( name = "3_calc" ) # Name of the module
+golem::add_module( name = "6_uM" ) # Name of the module
 
 ## Add helper functions ----
 ## Creates fct_* and utils_*
-golem::add_fct( "lipidxplorer_part_1", module = "1_raw" )
-golem::add_utils( "check_names", module = "1_raw"  )
+golem::add_fct( "data_pipeline", module = "6_blank" )
+golem::add_utils( "check_names", module = "4_blank"  )
 
 ## External resources
 ## Creates .js and .css files at inst/app/www

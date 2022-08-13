@@ -41,7 +41,10 @@ mod_1_raw_ui <- function(id, tabName){
                           ),
 
                           fluidRow(
-                            shinydashboard::box(DT::dataTableOutput(ns("calc_check")), width = 12)
+                            shinydashboard::box(
+                              DT::dataTableOutput(ns("calc_check")),
+                              width = 12
+                            )
                           )
   )
 
@@ -95,9 +98,7 @@ mod_1_raw_server <- function(id){
         ## LipidXplorer files
         lx_data <-  input$file_lx$datapath %>%
           read_lipidxplorer_files() %>%
-          clean_lipidxplorer_files(clean_samples = FALSE) %>%
-          dplyr::rename(scan_name = molecular_species) %>%
-          dplyr::select(class, species, scan_name, sample, intensity)
+          clean_lipidxplorer_files(clean_samples = FALSE)
 
 
         ## LipidView files
@@ -122,7 +123,7 @@ mod_1_raw_server <- function(id){
         # check_sample_names-function will stop the process!
         check_sample_names(lv_data, lx_data)
 
-        data <- rbind(lv_data, lx_data)
+        data <-  merge_with_lipidview(lx_data, lv_data)
       }
 
     })
@@ -203,8 +204,10 @@ mod_1_raw_server <- function(id){
     # Example outside the module, assign the module and call with ...$data()
     # raw <- raw_server(id)
     # raw$data()
-    list(data = raw1,
-         input_rmv_is = reactive(input$rmv_is))
+    list(
+      data = raw1,
+      input_rmv_is = reactive(input$rmv_is)
+    )
 
   })
 }

@@ -14,20 +14,24 @@ mod_2_meta_ui <- function(id, tabName){
 
                           fluidRow(
                             shinydashboard::box(
-                              rhandsontable::rHandsontableOutput(ns("meta_data")),
+                              rhandsontable::rHandsontableOutput(ns("metadata")),
                               hr(),
                               fileInput(ns("meta_file"), label = NULL, multiple = F,
                                         accept = c(".csv"),
-                                        placeholder = "meta_data.csv", width = 300,
-                                        buttonLabel = "Select meta data"),
+                                        placeholder = "metadata.csv", width = 300,
+                                        buttonLabel = "Select metadata"),
                               hr(),
-                              actionButton(ns("calc_meta"),"Add meta data"),
+                              actionButton(ns("calc_meta"), "Add metadata"),
+                              textOutput(ns("check_raw_meta")),
                               width = 12
                             )
                           ),
 
                           fluidRow(
-                            shinydashboard::box(DT::dataTableOutput(ns("meta_check")), width = 12)
+                            shinydashboard::box(
+                              DT::dataTableOutput(ns("meta_check")),
+                              width = 12
+                            )
                           )
   )
 }
@@ -43,21 +47,21 @@ mod_2_meta_server <- function(id, data_raw, input_raw) {
 
     rv <- reactiveValues(data = data.frame())
 
-    output$meta_data <- rhandsontable::renderRHandsontable({
+    output$metadata <- rhandsontable::renderRHandsontable({
 
       validate(
         need(input_raw, "Please upload files in tab '1 Raw data'.")
       )
 
       rhandsontable::rhandsontable(#width = 800, height = 500,
-        meta_data_template(data_raw)) #%>%
+        metadata_template(data_raw)) #%>%
       #hot_col(col = "class", readOnly = TRUE)
 
     })
 
-    observeEvent(input$meta_data$changes$changes,{
+    observeEvent(input$metadata$changes$changes,{
 
-      rv$data <- rhandsontable::hot_to_r(input$meta_data)
+      rv$data <- rhandsontable::hot_to_r(input$metadata)
 
     })
 
@@ -66,13 +70,13 @@ mod_2_meta_server <- function(id, data_raw, input_raw) {
       rv$data <- read.csv(input$meta_file$datapath, check.names = FALSE) #%>%
         #janitor::clean_names()                                                 # reactivate if clean_txt_files(clean_samples = TRUE)
 
-      output$meta_data <- rhandsontable::renderRHandsontable({
+      output$metadata <- rhandsontable::renderRHandsontable({
 
         rhandsontable::rhandsontable(read.csv(input$meta_file$datapath,
                                               check.names = FALSE) #%>%
                                      #janitor::clean_names()                    # reactivate if clean_txt_files(clean_samples = TRUE)
-                                     ) %>%
-          rhandsontable::hot_col(col = "class", readOnly = TRUE)
+                                     ) #%>%
+          #rhandsontable::hot_col(col = "class", readOnly = TRUE)
 
       })
 
@@ -90,9 +94,17 @@ mod_2_meta_server <- function(id, data_raw, input_raw) {
 
     })
 
+    observeEvent(input$calc_meta,{
+
+      # If sample names from metadata and rawdata are not the same
+      # "check_raw_meta"-function shows a warning!
+      output$check_raw_meta <- renderText({ check_raw_meta(data_raw, rv$data) })
+
+    })
+
     output$meta_check <- DT::renderDataTable(raw_plus_meta())
 
-    list(rawdata = raw_plus_meta)
+    list(data = raw_plus_meta)
 
   })
 
@@ -102,4 +114,4 @@ mod_2_meta_server <- function(id, data_raw, input_raw) {
 # mod_2_meta_ui("meta_ui_1")
 
 ## To be copied in the server
-# mod_2_meta_server("meta_ui_1")
+# mod_2_meta_server("meta_ui_1", data_raw, input_raw)

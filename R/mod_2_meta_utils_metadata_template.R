@@ -5,7 +5,7 @@
 #' @return The return value, if any, from executing the utility.
 #'
 #' @noRd
-meta_data_template <- function(data){
+metadata_template <- function(data){
 
   meta_rows <- c("group", "blank", "sample input", unique(data$class))
   meta_cols <- c("class", "rf_values", unique(data$sample))

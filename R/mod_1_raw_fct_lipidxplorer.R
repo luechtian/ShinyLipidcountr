@@ -1,10 +1,4 @@
-#' lipidxplorer_part_1
-#'
-#' @description A fct function
-#'
-#' @return The return value, if any, from executing the function.
-#'
-#' @noRd
+
 read_lipidxplorer_files <- function(path){
 
   readr::read_csv(path, show_col_types = FALSE, na = c("", "None")) %>%
@@ -90,4 +84,14 @@ clean_lipidxplorer_files <- function(rawdata, clean_samples = TRUE){
                                    species))
 
   return(data)
+}
+
+
+merge_with_lipidview <- function(lx_data, lv_data){
+
+  lx_data_for_merging <-  lx_data %>%
+    dplyr::rename(scan_name = molecular_species) %>%
+    dplyr::select(class, species, scan_name, sample, intensity)
+
+  rbind(lv_data, lx_data_for_merging)
 }

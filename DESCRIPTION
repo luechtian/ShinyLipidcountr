@@ -16,11 +16,14 @@ Imports:
     janitor,
     processx,
     purrr,
+    readr,
     rhandsontable,
     shiny (>= 1.7.1),
     shinydashboard,
     stringr,
-    thinkr
+    thinkr,
+    tidyr,
+    tidyselect
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.2
@@ -35,3 +38,5 @@ Suggests:
 Config/testthat/edition: 3
 Language: en-US
 VignetteBuilder: knitr
+Depends: 
+    R (>= 2.10)

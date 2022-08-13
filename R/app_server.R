@@ -13,6 +13,13 @@ app_server <- function( input, output, session ) {
   meta <- mod_2_meta_server("meta_ui_1", raw$data(), raw$input_rmv_is())
 
   #---- Calculations ----
-  mod_3_calc_server("calc_ui_1", "tabs", "blank", session)
+  ## intensity to pmol
+  pmol <- mod_3_pmol_server("pmol_ui_1", meta$data())
+
+  ## blank sub
+  pmol_blank <- mod_4_blank_server("blank_ui_1", pmol$data(), pmol$input_calc_pmol())
+
+  ## response factors
+  pmol_rf <- mod_5_rf_server("rf_ui_1", pmol_blank$data(), pmol_blank$input_calc_blank())
 
 }

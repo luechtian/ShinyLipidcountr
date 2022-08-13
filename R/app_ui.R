@@ -16,10 +16,12 @@ app_ui <- function(request) {
         shinydashboard::menuItem("1 Raw data", tabName = "raw", icon = icon("file-import")),
         shinydashboard::menuItem("2 Meta data", tabName = "meta", icon = icon("weight")),
         shinydashboard::menuItem("3 Calculations", tabName = "cal", icon = icon("calculator"),
-                                 shinydashboard::menuSubItem("intensity to pmol",
+                                 shinydashboard::menuSubItem("Intensity to pmol",
                                                              tabName = "pmol"),
                                  shinydashboard::menuSubItem("Blank subtraction",
-                                                             tabName = "blank"))
+                                                             tabName = "blank"),
+                                 shinydashboard::menuSubItem("Response factors",
+                                                             tabName = "rf"))
       )
     ),
 
@@ -32,13 +34,14 @@ app_ui <- function(request) {
         mod_2_meta_ui("meta_ui_1", tabName = "meta"),
 
         #---- calculations-tab content ----
-        mod_3_calc_ui("calc_ui_1", tabName = "pmol"),
-        shinydashboard::tabItem(tabName = "blank",
-                                fluidRow(
-                                  h2("blank tab content")
-                                )
-        )
+        ##--- pmol-subtab content ----
+          mod_3_pmol_ui("pmol_ui_1", tabName = "pmol"),
 
+        ##--- blank subtraction-subtab content ----
+          mod_4_blank_ui("blank_ui_1", tabName = "blank"),
+
+        ##--- Response factors-subtab content ----
+          mod_5_rf_ui("rf_ui_1", tabName = "rf")
         #----  ----
       )
     )

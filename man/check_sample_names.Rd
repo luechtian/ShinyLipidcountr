@@ -5,14 +5,14 @@
 \title{Compares sample names from LipidView and LipidXplorer. If names are not
 identical, check_sample_names() will stop the process}
 \usage{
-check_sample_names(data1, data2)
+check_sample_names(data1, data2, ignore = "kon")
 }
 \arguments{
+\item{ignore}{string. Pattern to ignore e.g. "kon" -> Ignores Kon A, B and C}
+
 \item{data}{tibble. Data table containing LipidView or LipidXplorer data}
 
 \item{column}{string. Name of the sample column}
-
-\item{ignore}{string. Pattern to ignore e.g. "kon" -> Ignores Kon A, B and C}
 }
 \value{
 vector
