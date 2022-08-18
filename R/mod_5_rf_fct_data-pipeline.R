@@ -1,4 +1,4 @@
-impute_rf <- function(raw_data, blank_sub = TRUE, kon = "kon"){
+impute_rf <- function(raw_data, blank_sub = TRUE, kon = "Kon"){
 
   if (any(is.na(raw_data$rf_values)) == TRUE){
 

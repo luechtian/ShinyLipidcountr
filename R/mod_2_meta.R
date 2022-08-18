@@ -109,7 +109,8 @@ mod_2_meta_server <- function(id, data_raw, input_raw, r6) {
 
     output$meta_check <- DT::renderDataTable(raw_plus_meta())
 
-    list(data = raw_plus_meta)
+    list(data = raw_plus_meta,
+         metadata = reactive(rv$data))
 
   })
 

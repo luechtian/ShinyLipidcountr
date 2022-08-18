@@ -235,20 +235,21 @@ raw_data_lv <-
 
 # If samples names from LipidView and LipidXplorer are not the same
 # check_sample_names-function will stop the process!
-check_sample_names(lv_data, lx_data)
+check_sample_names(raw_data_lv, raw_data_lx)
 
-data <- rbind(lv_data, lx_data)
+data <- merge_with_lipidview(raw_data_lx, raw_data_lv)
 ```
 
 
 ```{r}
-data_blank <- test_raw_data %>% 
+blank_data <- test_raw_data %>% 
   join_metadata(test_metadata) %>%
   join_istd_means() %>%
   intensity_to_pmol() %>%
   blank_sub() %>% 
-  impute_rf(blank_sub = TRUE) %>% 
-  apply_rf()
+  impute_rf(blank_sub = TRUE, kon = "Kon") %>% 
+  apply_rf() %>% 
+  pmol_to_uM()
 
 raw_data <- test_raw_data %>% 
   join_metadata(test_metadata) %>%
@@ -416,7 +417,7 @@ bank$withdraw(5)
 ```
 
 
-```{r}
+```{r rf}
 raw_data <- test_raw_data %>% 
   filter(class == "Chol") %>% 
   join_metadata(test_metadata) %>%
@@ -466,4 +467,60 @@ impute_rf <- function(raw_data, blank_sub = TRUE, kon = "kon"){
 stringr::str_detect(snakecase::to_any_case(
         as.character(raw_data$sample)), "kon")
 ```
+
+
+```{r}
+class_plot <- function(data){
+  
+  plot_data <- data %>%
+    dplyr::group_by(class) %>%
+    dplyr::mutate(ether = stringr::str_detect(species, "O-"),
+                  diacyl = any(ether)) %>%
+    dplyr::group_by(class, sample_name, group, ether, diacyl, sample_input) %>%
+    dplyr::summarise(uM = sum(uM), .groups = "drop") %>%
+    dplyr::mutate(class = ifelse(ether == TRUE, paste0("e", class), class),
+                  class = ifelse(diacyl == TRUE & ether == FALSE,
+                                 paste0("a", class), class)) %>%
+    dplyr::select(-ether, -diacyl) %>%
+    dplyr::group_by(sample_name) %>%
+    dplyr::mutate(mol_percent = uM * 100 / sum(uM)) %>%
+    dplyr::group_by(class, group) %>%
+    dplyr::mutate(sd = sd(mol_percent),
+                  mean_mol_percent = mean(mol_percent))
+  
+  plot_data %>% 
+    ggplot2::ggplot(ggplot2::aes(x = class,
+                                 y = mean_mol_percent,
+                                 fill = group)) +
+    ggplot2::geom_col(color = "black",
+                      width = 0.9,
+                      position = ggplot2::position_dodge()) +
+    ggplot2::ggtitle("Lipid class profile") +
+    ggplot2::xlab("Lipid classes") + 
+    ggplot2::ylab("Percentage / total lipids") +
+    ggplot2::labs(fill = "") + # removes legend title ("group")
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45),
+                   plot.title = ggplot2::element_text(hjust = 0.5)) +
+    ggplot2::geom_point(ggplot2::aes(x = class,
+                                     y = mol_percent,
+                                     fill = group,
+                                     color = group),
+                        position = ggplot2::position_dodge(0.9),
+                        size = 1,
+                        shape = 21,
+                        fill = "white") +
+    ggplot2::geom_errorbar(ggplot2::aes(ymin = mean_mol_percent - sd,
+                                        ymax = mean_mol_percent + sd),
+                           width = 0.3,
+                           size = 0.5,
+                           position = ggplot2::position_dodge(0.9)) +
+    ggplot2::scale_x_discrete(limits = lipid_class_order[lipid_class_order %in% plot_data$class]) +
+    ggplot2::guides(color = "none", size = "none") # removes geom_point-legend
+}
+
+class_plot(data)
+```
+
+
+
 

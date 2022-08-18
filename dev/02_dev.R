@@ -15,16 +15,16 @@
 
 ## Dependencies ----
 ## Add one line by package you want to add as dependency
-usethis::use_package( "snakecase" )
+usethis::use_package( "openxlsx" )
 
 ## Add modules ----
 ## Create a module infrastructure in R/
 golem::add_module( name = "2_meta" ) # Name of the module
-golem::add_module( name = "6_uM" ) # Name of the module
+golem::add_module( name = "excel" ) # Name of the module
 
 ## Add helper functions ----
 ## Creates fct_* and utils_*
-golem::add_fct( "data_pipeline", module = "5_rf" )
+golem::add_fct( "data_pipeline", module = "6_uM" )
 golem::add_utils( "check_names", module = "4_blank"  )
 
 ## External resources

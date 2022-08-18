@@ -15,6 +15,9 @@ mod_6_uM_ui <- function(id, tabName){
                           fluidRow(
                             shinydashboard::box(
                               actionButton(ns("calc_uM"),"Calculate uM-values"),
+                              checkboxInput(inputId = ns("sum_same_species"),
+                                            label = "Sum same species (for DAG/TAG from LipidView only)",
+                                            value = FALSE),
                               title = "pmol to uM"
                             )
                           ),
@@ -38,8 +41,18 @@ mod_6_uM_server <- function(id, data_rf){
 
     uM_data <- eventReactive(input$calc_uM,{
 
-      data_rf %>%
-        pmol_to_uM()
+      if(input$sum_same_species == FALSE){
+
+        data_rf %>%
+          pmol_to_uM()
+
+      } else if(input$sum_same_species == TRUE){
+
+        data_rf %>%
+          pmol_to_uM() %>%
+          sum_same_species()
+
+      }
 
     })
 

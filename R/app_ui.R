@@ -23,7 +23,8 @@ app_ui <- function(request) {
                                  shinydashboard::menuSubItem("Response factors",
                                                              tabName = "rf"),
                                  shinydashboard::menuSubItem("pmol to uM",
-                                                             tabName = "uM"))
+                                                             tabName = "uM")),
+        shinydashboard::menuItem("4 Excel", tabName = "excel", icon = icon("file-excel"))
       )
     ),
 
@@ -46,7 +47,10 @@ app_ui <- function(request) {
           mod_5_rf_ui("rf_ui_1", tabName = "rf"),
 
         ##--- uM-subtab content ----
-          mod_6_uM_ui("uM_ui_1", tabName = "uM")
+          mod_6_uM_ui("uM_ui_1", tabName = "uM"),
+
+        #---- excel-tab content ----
+        mod_excel_ui("excel_ui_1", tabName = "excel")
       )
     )
 

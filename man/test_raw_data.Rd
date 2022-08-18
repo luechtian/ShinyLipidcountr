@@ -5,7 +5,7 @@
 \alias{test_raw_data}
 \title{Tibble with merged lipidomics data from LipidView and LipidXplorer}
 \format{
-A data frame with 17165 rows and 5 variables:
+A data frame with 9546 rows and 5 variables:
 \describe{
   \item{class}{lipid class abbreviation}
   \item{species}{lipid species, IS x:y;z, IS = internal standard, x = c-atoms, y = double bonds, z = hydroxilation grade}
