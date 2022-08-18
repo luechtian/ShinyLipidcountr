@@ -14,14 +14,14 @@ mod_6_uM_ui <- function(id, tabName){
 
                           fluidRow(
                             shinydashboard::box(
-                              actionButton(ns("calc_um"),"Use Response factors"),
-                              title = "Calculate micromolar"
+                              actionButton(ns("calc_uM"),"Calculate uM-values"),
+                              title = "pmol to uM"
                             )
                           ),
 
                           fluidRow(
                             shinydashboard::box(
-                              DT::dataTableOutput(ns("rf_check")),
+                              DT::dataTableOutput(ns("uM_check")),
                               width = 12
                             )
                           )
@@ -31,15 +31,28 @@ mod_6_uM_ui <- function(id, tabName){
 #' 6_uM Server Functions
 #'
 #' @noRd
-mod_6_uM_server <- function(id){
-  moduleServer( id, function(input, output, session){
+mod_6_uM_server <- function(id, data_rf){
+
+  moduleServer(id, function(input, output, session){
     ns <- session$ns
+
+    uM_data <- eventReactive(input$calc_uM,{
+
+      data_rf %>%
+        pmol_to_uM()
+
+    })
+
+    output$uM_check <- DT::renderDataTable({uM_data()})
+
+    list(data = uM_data,
+         input_calc_pmol = reactive(input$calc_uM))
 
   })
 }
 
 ## To be copied in the UI
-# mod_6_uM_ui("6_uM_ui_1")
+# mod_6_uM_ui("uM_ui_1")
 
 ## To be copied in the server
-# mod_6_uM_server("6_uM_ui_1")
+# mod_6_uM_server("uM_ui_1")

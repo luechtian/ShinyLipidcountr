@@ -31,14 +31,15 @@ mod_3_pmol_ui <- function(id, tabName){
 #' 3_pmol Server Functions
 #'
 #' @noRd
-mod_3_pmol_server <- function(id, data_meta){
+mod_3_pmol_server <- function(id, data_meta, r6){
 
   moduleServer(id, function(input, output, session){
     ns <- session$ns
 
     pmol_data <- eventReactive(input$calc_pmol,{
+      gargoyle::watch("update_meta")
 
-      data_meta %>%
+      r6$data %>%
         join_istd_means() %>%
         intensity_to_pmol()
 

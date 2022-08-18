@@ -21,7 +21,9 @@ app_ui <- function(request) {
                                  shinydashboard::menuSubItem("Blank subtraction",
                                                              tabName = "blank"),
                                  shinydashboard::menuSubItem("Response factors",
-                                                             tabName = "rf"))
+                                                             tabName = "rf"),
+                                 shinydashboard::menuSubItem("pmol to uM",
+                                                             tabName = "uM"))
       )
     ),
 
@@ -41,8 +43,10 @@ app_ui <- function(request) {
           mod_4_blank_ui("blank_ui_1", tabName = "blank"),
 
         ##--- Response factors-subtab content ----
-          mod_5_rf_ui("rf_ui_1", tabName = "rf")
-        #----  ----
+          mod_5_rf_ui("rf_ui_1", tabName = "rf"),
+
+        ##--- uM-subtab content ----
+          mod_6_uM_ui("uM_ui_1", tabName = "uM")
       )
     )
 

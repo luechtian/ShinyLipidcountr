@@ -22,6 +22,13 @@ mod_5_rf_ui <- function(id, tabName){
 
                           fluidRow(
                             shinydashboard::box(
+                              rhandsontable::rHandsontableOutput(ns("rf_values")),
+                              width = 12
+                            )
+                          ),
+
+                          fluidRow(
+                            shinydashboard::box(
                               DT::dataTableOutput(ns("rf_check")),
                               width = 12
                             )
@@ -37,19 +44,35 @@ mod_5_rf_server <- function(id, data_blank, input_blank){
   moduleServer(id, function(input, output, session){
     ns <- session$ns
 
+    output$rf_values <- rhandsontable::renderRHandsontable({
+
+      validate(
+        need(data_blank, "Please proceed with blank subtraction first."),
+        need(rf_data$data, ""),
+      )
+
+      rhandsontable::rhandsontable(rf_data$data %>%
+                                     dplyr::select(class, rf_values) %>%
+                                     dplyr::mutate(rf_values =
+                                                     round(rf_values,
+                                                                     digits = 2)
+                                     ) %>%
+                                     unique() %>%
+                                     t(),
+                                   readOnly = TRUE
+      )
+
+    })
+
     rf_data <- reactiveValues()
 
     observeEvent(input$calc_rf, {
 
-      rf_data$data <- data_blank  %>%
-        dplyr::mutate(pmol_corr2 = pmol_corr * rf_values) %>%
-        dplyr::select(-rf_values)
+      rf_data$data <- data_blank %>%
+        impute_rf(blank_sub = TRUE, kon = "Kon") %>%
+        apply_rf()
 
       output$rf_check <- DT::renderDataTable({
-
-        # validate(
-        #   need(input_blank, "Please proceed with blank subtraction first.")
-        # )
 
         rf_data$data
 
@@ -59,8 +82,7 @@ mod_5_rf_server <- function(id, data_blank, input_blank){
 
     observeEvent(input$omit_rf, {
 
-      rf_data$data <- data_blank %>%
-        dplyr::select(-rf_values)
+      rf_data$data <- data_blank
 
     })
 

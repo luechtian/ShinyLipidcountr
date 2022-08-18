@@ -39,7 +39,7 @@ mod_2_meta_ui <- function(id, tabName){
 #' meta Server Functions
 #'
 #' @noRd
-mod_2_meta_server <- function(id, data_raw, input_raw) {
+mod_2_meta_server <- function(id, data_raw, input_raw, r6) {
 
   moduleServer(id, function(input, output, session) {
 
@@ -89,8 +89,13 @@ mod_2_meta_server <- function(id, data_raw, input_raw) {
         need(length(rv$data) > 0, "Please provide metadata (upload via csv or type in manually after uploading rawdata).")
       )
 
+      r6$data <- data_raw %>%
+        join_metadata(rv$data)
+      gargoyle::trigger("update_meta")
+
       data_raw %>%
         join_metadata(rv$data)
+
 
     })
 

@@ -1,7 +1,3 @@
-# Blank substraction
-## Use this method, if EVERY lipidclass has multiple blanks (Kon A)
-## dont forget the "blank"-row in metadata-file to assign a blank to a sample
-## This feature isn't implented yet for impute_rf()-function
 blank_sub <- function(raw_data){
 
   blank_data <- raw_data %>%

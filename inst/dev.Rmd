@@ -246,7 +246,9 @@ data_blank <- test_raw_data %>%
   join_metadata(test_metadata) %>%
   join_istd_means() %>%
   intensity_to_pmol() %>%
-  blank_sub() 
+  blank_sub() %>% 
+  impute_rf(blank_sub = TRUE) %>% 
+  apply_rf()
 
 raw_data <- test_raw_data %>% 
   join_metadata(test_metadata) %>%
@@ -264,7 +266,7 @@ data_omit_blank <- test_raw_data %>%
 ```
 
 
-```{r}
+```{r blank sub}
 blank_sub <- function(raw_data){
 
   blank_data <- raw_data %>%
@@ -289,25 +291,86 @@ blank_sub <- function(raw_data){
 ```
 
 
-```{r}
+```{r R6 tests}
+### R6 LipidomicsData ----------------------------------------------------------
 LipidomicsData <- R6::R6Class("LipidomicsData",
                               public = list(
-                                rawdata = data.frame(),
-                                metadata = data.frame()
+                                data = NULL,
+                                rawdata = NULL,
+                                metadata = NULL,
+                                join_metadata = function(){
+                                  # Extract sample input [ul] from meta data
+                                  sample_input <- self$metadata %>%
+                                    dplyr::filter(class == "sample input") %>%
+                                    dplyr::select(-class, -rf_values) %>%
+                                    tidyr::pivot_longer(everything(),
+                                                        names_to = "sample",
+                                                        values_to = "sample_input") %>%
+                                    dplyr::mutate(sample_input = as.numeric(sample_input))
+                                
+                                  sample_groups <- self$metadata %>%
+                                    dplyr::filter(class == "group") %>%
+                                    dplyr::select(-class, -rf_values) %>%
+                                    tidyr::pivot_longer(everything(),
+                                                        names_to = "sample",
+                                                        values_to = "group")
+                                
+                                  sample_blanks <- self$metadata %>%
+                                    dplyr::filter(class == "blank") %>%
+                                    dplyr::select(-class, -rf_values) %>%
+                                    tidyr::pivot_longer(everything(),
+                                                        names_to = "sample",
+                                                        values_to = "blank")
+                                  
+                                  # Extract internal standard concentrations [pmol]
+                                  # and response factors (rf-values) from meta data
+                                  standard_input <- self$metadata %>%
+                                    dplyr::filter(class != "sample input",
+                                                  class != "group",
+                                                  # if multi_blank_sub() is in use, it is necessary to remove blank-row
+                                                  class != "blank") %>%
+                                    tidyr::pivot_longer(
+                                      cols = c(-class, -rf_values),
+                                      names_to = "sample",
+                                      values_to = "standard_input") %>%
+                                    dplyr::mutate(standard_input = as.numeric(standard_input))
+                                  
+                                  # Join metadata
+                                  joined_metadata <- standard_input %>%
+                                    dplyr::left_join(sample_input, by = "sample") %>%
+                                    dplyr::left_join(sample_groups, by = "sample") %>%
+                                    dplyr::left_join(sample_blanks, by = "sample")
+                                  
+                                  # Join raw_data and metadata and keep order for species, sample and groups
+                                  self$data <- 
+                                    dplyr::left_join(self$rawdata, joined_metadata, by = c("class", "sample")) %>%
+                                    dplyr::mutate(species = forcats::fct_inorder(species, ordered = NA),
+                                                  sample = forcats::fct_inorder(sample, ordered = NA),
+                                                  group = forcats::fct_inorder(group, ordered = NA),
+                                                  sample_name = stringr::str_remove(sample, "sample_"),
+                                                  sample_name = paste(sample_name, "-", group),
+                                                  sample_name = forcats::fct_inorder(sample_name, ordered = NA))
+                                }
                               )
+                                
+
 )
-LipidomicsData$set("public", "rawdata", test_raw_data)
-LipidomicsData$set("public", "metadata", test_metadata)
+
+#LipidomicsData$set("public", "rawdata", test_raw_data)
+#LipidomicsData$set("public", "metadata", test_metadata)
 
 test <- LipidomicsData$new()
 
 test$rawdata <- test_raw_data
+test$metadata <- dplyr::as_tibble(test_metadata)
+
+test$join_metadata()
+test$data <- 1
 
 test$rawdata <- test_raw_data %>% join_metadata(test$metadata)
-```
 
+### R6 MyBankAccount -----------------------------------------------------------
 
-```{r}
 MyBankAccount <- R6::R6Class(
   "MyBankAccount",
   public = list(
@@ -344,5 +407,63 @@ MyBankAccount <- R6::R6Class(
 bank <- MyBankAccount$new(balance = 0)
 bank$deposit(10)
 bank$withdraw(10)
+
+bank$deposit(10)
+
+bank$balance
+bank$withdraw(5)
+
+```
+
+
+```{r}
+raw_data <- test_raw_data %>% 
+  filter(class == "Chol") %>% 
+  join_metadata(test_metadata) %>%
+  join_istd_means() %>%
+  intensity_to_pmol() %>%
+  blank_sub() %>% 
+  impute_rf(blank_sub = TRUE, kon = "Kon")
+
+impute_rf <- function(raw_data, blank_sub = TRUE, kon = "kon"){
+
+  if (any(is.na(raw_data$rf_values)) == TRUE){
+
+    # Calculate pmol-values of kon's
+    missing_rf <- raw_data %>%
+      dplyr::filter(stringr::str_detect(as.character(sample), kon) & is.na(rf_values))
+
+    # blank substraction (depending on blank_sub-argument of function), then calculate response factors
+    new_rf <- missing_rf %>%
+      dplyr::mutate(rf_values = if(blank_sub == TRUE){
+        sample_input / pmol_corr} else {sample_input / pmol}) %>%
+      dplyr::group_by(class, species) %>%
+      dplyr::summarise(rf_values = mean(rf_values), .groups = "drop")
+
+    # join and unite the calculated rf-values and get rid off kon_b and c.
+    # unite()-function merges 2 columns and returns characters.
+    # Therefore remove NA-strings and convert back to numeric)
+    dplyr::left_join(raw_data,
+                     new_rf,
+                     by = c("class", "species")) %>%
+      tidyr::unite("rf_values",
+                   "rf_values.y",
+                   "rf_values.x",
+                   sep = "",
+                   remove = TRUE,
+                   na.rm = TRUE) %>%
+      dplyr::mutate(rf_values = stringr::str_remove_all(rf_values, "NA"),
+                    rf_values = as.numeric(rf_values)) %>%
+      # OR-function in str_detect to keep "Kon A" for further processing, but remove all other "Kon"s
+      dplyr::filter(!stringr::str_detect(sample, kon))
+
+  } else {
+    raw_data
+  }
+
+}
+
+stringr::str_detect(snakecase::to_any_case(
+        as.character(raw_data$sample)), "kon")
 ```
 
