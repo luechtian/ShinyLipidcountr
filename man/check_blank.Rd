@@ -15,7 +15,3 @@ vector
 \description{
 Checks sample-column from raw data, if any blank is there from metadata
 }
-\examples{
-
-
-}

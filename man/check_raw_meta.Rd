@@ -23,7 +23,3 @@ vector
 Compares sample names from metadata file and rawdata. If names are not
 identical, check_raw_meta() will stop the process
 }
-\examples{
-
-
-}

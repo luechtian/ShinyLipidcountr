@@ -132,14 +132,6 @@ clean_lipidxplorer_files <- function(rawdata, clean_samples = TRUE){
   
   return(data)
 }
-
-path_to_csv <- "C:/Users/christian/Mass_spectrometry/Spektren/QE/220712_XtrIL_AnaMartinVillalba/eval/eval-out.csv"
-
-read_lipidxplorer_files() %>% 
-  clean_lipidxplorer_files(clean_samples = TRUE) %>% 
-  rename(scan_name = molecular_species) %>% 
-  select(class, species, scan_name, sample, intensity) %>% 
-  rbind(rawdata)
 ```
 
 
@@ -152,14 +144,14 @@ lx_data <-  #input$file_lx$datapath %>%
           dplyr::select(class, species, scan_name, sample, intensity)
 
 ####
-lv_data <- #files %>%
-  list_txt_files("C:/Users/christian/R projects/LipidView_analysis/data/AMV/220712") %>% 
-          read_txt_files() %>%
-          shinylipidcountr::clean_txt_files(clean_samples = FALSE) %>%
-          tidyr::pivot_longer(
-            cols = c(-species, -class, -scan_name),
-            names_to = "sample",
-            values_to = "intensity")
+lv_data <-system.file("extdata", package = "shinylipidcountr") %>%
+  list_txt_files() %>% 
+  read_txt_files() %>%
+  shinylipidcountr::clean_txt_files(clean_samples = FALSE) %>%
+  tidyr::pivot_longer(
+    cols = c(-species, -class, -scan_name),
+    names_to = "sample",
+    values_to = "intensity")
 
 get_samples(lv_data)
 get_samples(lx_data)
@@ -242,7 +234,7 @@ data <- merge_with_lipidview(raw_data_lx, raw_data_lv)
 
 
 ```{r}
-blank_data <- test_raw_data %>% 
+data <- test_raw_data %>% 
   join_metadata(test_metadata) %>%
   join_istd_means() %>%
   intensity_to_pmol() %>%

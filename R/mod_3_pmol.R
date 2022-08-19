@@ -38,8 +38,8 @@ mod_3_pmol_server <- function(id, data_meta, r6){
 
     pmol_data <- eventReactive(input$calc_pmol,{
       gargoyle::watch("update_meta")
-
-      r6$data %>%
+      data_meta %>%
+      # r6$data %>%
         join_istd_means() %>%
         intensity_to_pmol()
 

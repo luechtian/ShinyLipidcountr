@@ -19,7 +19,3 @@ vector
 \description{
 Subsets all samples from data without controls
 }
-\examples{
-
-
-}

@@ -7,7 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_2_meta_ui <- function(id, tabName){
+mod_2beta_meta_ui <- function(id, tabName){
   ns <- NS(id)
 
   shinydashboard::tabItem(tabName = tabName,
@@ -39,7 +39,7 @@ mod_2_meta_ui <- function(id, tabName){
 #' meta Server Functions
 #'
 #' @noRd
-mod_2_meta_server <- function(id, data_raw, input_raw, r6) {
+mod_2beta_meta_server <- function(id, data_raw, input_raw, r6) {
 
   moduleServer(id, function(input, output, session) {
 
@@ -99,13 +99,13 @@ mod_2_meta_server <- function(id, data_raw, input_raw, r6) {
 
     })
 
-    observeEvent(input$calc_meta,{
-
-      # If sample names from metadata and rawdata are not the same
-      # "check_raw_meta"-function shows a warning!
-      output$check_raw_meta <- renderText({ check_raw_meta(data_raw, rv$data) })
-
-    })
+    # observeEvent(input$calc_meta,{
+    #
+    #   # If sample names from metadata and rawdata are not the same
+    #   # "check_raw_meta"-function shows a warning!
+    #   output$check_raw_meta <- renderText({ check_raw_meta(data_raw, rv$data) })
+    #
+    # })
 
     output$meta_check <- DT::renderDataTable(raw_plus_meta())
 

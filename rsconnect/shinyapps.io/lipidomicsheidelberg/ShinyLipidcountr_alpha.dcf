@@ -4,8 +4,10 @@ username:
 account: lipidomicsheidelberg
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
-appId: 6805863
-bundleId: 6214759
+appId: 6809914
+bundleId: 6216951
 url: https://lipidomicsheidelberg.shinyapps.io/ShinyLipidcountr_alpha/
-when: 1660841186.97641
-lastSyncTime: 1660841186.97641
+when: 1660894519.32569
+lastSyncTime: 1660894519.32569
+asMultiple: FALSE
+asStatic: FALSE

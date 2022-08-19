@@ -63,7 +63,7 @@ species_mean_table <- function(data, lipid_class){
     dplyr::mutate(mol_percent = uM * 100 / sum(uM)) %>%
     dplyr::group_by(group, species) %>%
     dplyr::summarise(mean_mol_percent = mean(mol_percent), .groups = "drop") %>%
-    dplyr::arrange(factor(species, levels = dplyr::filter(data, data == lipid_class)$species %>% unique)) %>%
+    #dplyr::arrange(factor(species, levels = dplyr::filter(data, data == lipid_class)$species %>% unique)) %>%
     tidyr::pivot_wider(names_from = species,
                        values_from = mean_mol_percent) %>%
     dplyr::rename(" " = group)
@@ -129,7 +129,8 @@ add_lipidclass_sheet <- function(lipid_class, excel_datalist, workbook){
   species_df <- excel_datalist[[lipid_class]]$species
   species_mean_df <- excel_datalist[[lipid_class]]$species_mean
 
-  print(excel_datalist[[lipid_class]]$species_plot)
+  # print(excel_datalist[[lipid_class]]$species_plot)
+  ggplot2::ggsave("p1.png", plot = excel_datalist[[lipid_class]]$species_plot, dpi = 300, width = 14, height = 6)
 
   #writeData(workbook, lipid_class, as.character(files[lipid_class]), startCol = 1, startRow = 1)
 
@@ -156,8 +157,10 @@ add_lipidclass_sheet <- function(lipid_class, excel_datalist, workbook){
                       startCol = 1, startRow = (nrow(sum_df) + nrow(species_df) + 10))
 
 
-  openxlsx::insertPlot(workbook, lipid_class, width = 18, height = 6, fileType = "png", units = "in",
-                       startRow = ((nrow(sum_df) + 2) + (nrow(species_df) + 9) + (nrow(species_mean_df) + 2)))
+  # openxlsx::insertPlot(workbook, lipid_class, width = 18, height = 6, fileType = "png", units = "in",
+  #                      startRow = ((nrow(sum_df) + 2) + (nrow(species_df) + 9) + (nrow(species_mean_df) + 2)))
+  openxlsx::insertImage(workbook, lipid_class, "p1.png", units = "in", width = 14, height = 6,
+                        startRow = ((nrow(sum_df) + 2) + (nrow(species_df) + 9) + (nrow(species_mean_df) + 2)))
 
 }
 
@@ -174,11 +177,13 @@ add_summary_sheet <- function(data, workbook){
 
   mol_percent_table <- excel_class_profile_percent(data = data)
 
-  print(class_plot(data))
+  # print(class_plot(data))
+  ggplot2::ggsave("p2.png", plot = class_plot(data), dpi = 300, width = 14, height = 6)
 
   openxlsx::writeData(workbook, "summary", uM_table, startCol = 1, startRow = 2, rowNames = FALSE)
   openxlsx::writeData(workbook, "summary", mol_percent_table, startCol = 1, startRow = (nrow(uM_table) + 5), rowNames = FALSE)
-  openxlsx::insertPlot(workbook, "summary", width = 15, height = 5, fileType = "png", units = "in",startRow = ((2 * nrow(uM_table))+8))
+  # openxlsx::insertPlot(workbook, "summary", width = 15, height = 5, fileType = "png", units = "in",startRow = ((2 * nrow(uM_table))+8))
+  openxlsx::insertImage(workbook, "summary", "p2.png", units = "in", width = 14, height = 6, startRow = ((2 * nrow(uM_table))+8))
 
 }
 

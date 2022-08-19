@@ -17,9 +17,6 @@ library(rhandsontable)
 library(tidyverse)
 library(janitor)
 
-source("C:/Users/christian/R projects/ShinyApp LipidView Wrangler/LipidView Wrangler/Wrangler/R/read_lipidview_files.R")
-source("C:/Users/christian/R projects/ShinyApp LipidView Wrangler/LipidView Wrangler/Wrangler/R/LipidView_analysis_functional_version.R")
-source("C:/Users/christian/R projects/ShinyApp LipidView Wrangler/LipidView Wrangler/Wrangler/R/mod_raw.R")
 
 #####
 
@@ -63,8 +60,9 @@ require(dplyr)
 server <-  function(input, output) {
 
   dataa <- reactive({
-    table1 <-  
-    lipidcountr::list_txt_files( "C:/Users/christian/R projects/LipidView_analysis/data/AMV/220712") %>%
+    table1 <-
+      system.file("extdata", package = "shinylipidcountr") %>% 
+      lipidcountr::list_txt_files() %>%
       lipidcountr::read_txt_files() %>% 
       clean_txt_files()
 
@@ -146,8 +144,6 @@ library(DT)
 library(rhandsontable)
 library(tidyverse)
 library(janitor)
-source("C:/Users/christian/R projects/ShinyApp LipidView Wrangler/LipidView Wrangler/Wrangler/R/read_lipidview_files.R")
-source("C:/Users/christian/R projects/ShinyApp LipidView Wrangler/LipidView Wrangler/Wrangler/R/LipidView_analysis_functional_version.R")
 #####
 
 ui <- shinyUI({

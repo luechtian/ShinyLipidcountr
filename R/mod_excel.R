@@ -33,7 +33,7 @@ mod_excel_ui <- function(id, tabName){
 #'
 #' @noRd
 mod_excel_server <- function(id, uM_data, metadata){
-  moduleServer( id, function(input, output, session){
+  moduleServer(id, function(input, output, session){
     ns <- session$ns
 
     observeEvent(input$start_excel, {
@@ -49,7 +49,7 @@ mod_excel_server <- function(id, uM_data, metadata){
       withProgress(message = 'Building barplots', style = "notification", value = 0.5, {
         excel_data <-
           unique(uM_data()$class) %>%
-          purrr::map(~ funs %>% purrr::map(purrr::exec, .x, !!!args)) %>%
+          purrr::map(~ funs %>% purrr::map(rlang::exec, .x, !!!args)) %>%
           setNames(unique(uM_data()$class))
       })
 
@@ -65,7 +65,7 @@ mod_excel_server <- function(id, uM_data, metadata){
 
       openxlsx::writeData(wb, "metadata", metadata(), startCol = 1, startRow = 1)
 
-      ##### Add lipidclass sheets #####
+      #### Add lipidclass sheets #####
       withProgress(message = 'Building workbook', style = "notification", value = 0.5, {
 
         unique(uM_data()$class) %>%
@@ -77,7 +77,7 @@ mod_excel_server <- function(id, uM_data, metadata){
       ##### Add summary sheet #####
       uM_data() %>%
         add_summary_sheet(workbook = wb)
-
+      #
       ##### Add uM sheet #####
       uM_data() %>%
         add_uM_sheet(workbook = wb)
@@ -94,7 +94,6 @@ mod_excel_server <- function(id, uM_data, metadata){
       openxlsx::saveWorkbook(wb, paste0("test",".xlsx"), overwrite = TRUE)
 
       ####Check-df to visualise calculations are finished
-
 
       output$excel_check <- DT::renderDataTable({
 
