@@ -20,35 +20,36 @@ join_metadata <- function(raw_data, metadata){
     dplyr::select(-class, -rf_values) %>%
     tidyr::pivot_longer(everything(),
                         names_to = "sample",
-                        values_to = "sample_input") %>%
-    dplyr::mutate(sample_input = as.numeric(sample_input))
+                        values_to = "sample_input",
+                        values_transform = as.numeric)
 
   sample_groups <- metadata %>%
     dplyr::filter(class == "group") %>%
     dplyr::select(-class, -rf_values) %>%
     tidyr::pivot_longer(everything(),
                         names_to = "sample",
-                        values_to = "group")
+                        values_to = "group",
+                        values_transform = as.character)
 
   sample_blanks <- metadata %>%
     dplyr::filter(class == "blank") %>%
     dplyr::select(-class, -rf_values) %>%
     tidyr::pivot_longer(everything(),
                         names_to = "sample",
-                        values_to = "blank")
+                        values_to = "blank",
+                        values_transform = as.character)
 
   # Extract internal standard concentrations [pmol]
   # and response factors (rf-values) from meta data
   standard_input <- metadata %>%
     dplyr::filter(class != "sample input",
                   class != "group",
-                  # if multi_blank_sub() is in use, it is necessary to remove blank-row
                   class != "blank") %>%
     tidyr::pivot_longer(
       cols = c(-class, -rf_values),
       names_to = "sample",
-      values_to = "standard_input") %>%
-    dplyr::mutate(standard_input = as.numeric(standard_input))
+      values_to = "standard_input",
+      values_transform = as.numeric)
 
   # Join metadata
   joined_metadata <- standard_input %>%

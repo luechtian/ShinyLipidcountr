@@ -61,72 +61,80 @@ mod_1_raw_server <- function(id){
     # Processing of file input ----
     raw <- eventReactive(input$calc,{
 
-      #LipidView files
-      if(input$radio == 1){
+        #LipidView files
+        if(input$radio == 1){
 
-        files <- input$files$datapath
+          withProgress(message = 'Merging files', style = "notification", value = 0.5, {
 
-        filenames <- input$files$name %>%
-          purrr::map(name_lipid_file) %>%
-          unlist()
+            files <- input$files$datapath
 
-        names(files) <- names(filenames)
+            filenames <- input$files$name %>%
+              purrr::map(name_lipid_file) %>%
+              unlist()
 
-        ##### main data #####
-        data <- files %>%
-          read_txt_files() %>%
-          clean_txt_files(clean_samples = FALSE) %>%
-          tidyr::pivot_longer(
-            cols = c(-species, -class, -scan_name),
-            names_to = "sample",
-            values_to = "intensity")
+            names(files) <- names(filenames)
 
-      }
+            ##### main data #####
+            data <- files %>%
+              read_txt_files() %>%
+              clean_txt_files(clean_samples = FALSE) %>%
+              tidyr::pivot_longer(
+                cols = c(-species, -class, -scan_name),
+                names_to = "sample",
+                values_to = "intensity")
 
-      #LipidXplorer file
-      else if(input$radio == 2){
+          })
 
-        data <- input$files$datapath %>%
-          read_lipidxplorer_files() %>%
-          clean_lipidxplorer_files(clean_samples = FALSE)
-      }
+        }
 
-      # LV / LX files combined
-      else if(input$radio == 3){
+        #LipidXplorer file
+        else if(input$radio == 2){
+
+          data <- input$files$datapath %>%
+            read_lipidxplorer_files() %>%
+            clean_lipidxplorer_files(clean_samples = FALSE)
+        }
+
+        # LV / LX files combined
+        else if(input$radio == 3){
+
+          withProgress(message = 'Merging files', style = "notification", value = 0.5, {
+
+            ## LipidXplorer files
+            lx_data <-  input$file_lx$datapath %>%
+              read_lipidxplorer_files() %>%
+              clean_lipidxplorer_files(clean_samples = FALSE)
 
 
-        ## LipidXplorer files
-        lx_data <-  input$file_lx$datapath %>%
-          read_lipidxplorer_files() %>%
-          clean_lipidxplorer_files(clean_samples = FALSE)
+            ## LipidView files
+            files <- input$files$datapath
 
+            filenames <- input$files$name %>%
+              purrr::map(name_lipid_file) %>%
+              unlist()
 
-        ## LipidView files
-        files <- input$files$datapath
+            names(files) <- names(filenames)
 
-        filenames <- input$files$name %>%
-          purrr::map(name_lipid_file) %>%
-          unlist()
+            ##### main data #####
+            lv_data <- files %>%
+              read_txt_files() %>%
+              clean_txt_files(clean_samples = FALSE) %>%
+              tidyr::pivot_longer(
+                cols = c(-species, -class, -scan_name),
+                names_to = "sample",
+                values_to = "intensity")
 
-        names(files) <- names(filenames)
+            # If samples names from LipidView and LipidXplorer are not the same
+            # check_sample_names-function will stop the process!
+            check_sample_names(lv_data, lx_data)
 
-        ##### main data #####
-        lv_data <- files %>%
-          read_txt_files() %>%
-          clean_txt_files(clean_samples = FALSE) %>%
-          tidyr::pivot_longer(
-            cols = c(-species, -class, -scan_name),
-            names_to = "sample",
-            values_to = "intensity")
+            data <-  merge_with_lipidview(lx_data, lv_data)
 
-        # If samples names from LipidView and LipidXplorer are not the same
-        # check_sample_names-function will stop the process!
-        check_sample_names(lv_data, lx_data)
+          })
 
-        data <-  merge_with_lipidview(lx_data, lv_data)
-      }
+        }
 
-    })
+      })
 
     # Dynamic File input appears, if radio button 3 is active ----
     active_elements <- reactiveVal(value = NULL)

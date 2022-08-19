@@ -14,8 +14,11 @@ mod_excel_ui <- function(id, tabName){
 
                           fluidRow(
                             shinydashboard::box(
+                              numericInput(ns("plot_threshold"), "mol%-threshold",
+                                           value = 0.5, step = 0.1, width = '30%'),
                               actionButton(ns("start_excel"), "Build Excel-workbook"),
-                              downloadButton(ns("excel"), "Download Excel-Workbook")
+                              downloadButton(ns("excel"), "Download Excel-Workbook"),
+                              title = "Prepare and download Excel workbook"
                             )
                           ),
 
@@ -44,7 +47,8 @@ mod_excel_server <- function(id, uM_data, metadata){
                 species_mean = species_mean_table,
                 species_plot = species_plot)
 
-      args <- list(data = uM_data())
+      args <- list(data = uM_data(),
+                   threshold = input$plot_threshold)
 
       withProgress(message = 'Building barplots', style = "notification", value = 0.5, {
         excel_data <-
@@ -91,7 +95,7 @@ mod_excel_server <- function(id, uM_data, metadata){
 
       openxlsx::worksheetOrder(wb) <- match(excel_sheet_order, openxlsx::sheets(wb))
 
-      openxlsx::saveWorkbook(wb, paste0("test",".xlsx"), overwrite = TRUE)
+      openxlsx::saveWorkbook(wb, paste0("inst/dl/wb",".xlsx"), overwrite = TRUE)
 
       ####Check-df to visualise calculations are finished
 
@@ -107,7 +111,7 @@ mod_excel_server <- function(id, uM_data, metadata){
         paste("output", "xlsx", sep = ".")
       },
       content = function(file2) {
-        file.copy("test.xlsx", file2)
+        file.copy("inst/dl/wb.xlsx", file2)
       }
     )
 

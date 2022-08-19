@@ -32,7 +32,8 @@ impute_rf <- function(raw_data, blank_sub = TRUE, kon = "Kon"){
       dplyr::filter(!stringr::str_detect(sample, kon))
 
   } else {
-    raw_data
+    raw_data %>%
+      dplyr::mutate(rf_values = as.numeric(rf_values))
   }
 
 }
@@ -42,7 +43,7 @@ apply_rf <- function(raw_data){
 
   if(length(raw_data) > 0){
     raw_data %>%
-      dplyr::mutate(pmol_corr = pmol_corr * rf_values)
+      dplyr::mutate(pmol_corr = pmol_corr *rf_values)
   }
 
 }

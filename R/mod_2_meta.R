@@ -20,6 +20,7 @@ mod_2_meta_ui <- function(id, tabName){
                                         accept = c(".csv"),
                                         placeholder = "metadata.csv", width = 300,
                                         buttonLabel = "Select metadata"),
+                              downloadButton(ns("metadata_dl"), "Download metadata"),
                               hr(),
                               actionButton(ns("calc_meta"), "Add metadata"),
                               textOutput(ns("check_raw_meta")),
@@ -108,6 +109,15 @@ mod_2_meta_server <- function(id, data_raw, input_raw, r6) {
     })
 
     output$meta_check <- DT::renderDataTable(raw_plus_meta())
+
+    output$metadata_dl <- downloadHandler(
+      filename = function() {
+        paste("metadata", "csv", sep = ".")
+      },
+      content = function(file2) {
+        write.csv(rv$data, file2, row.names = FALSE)
+      }
+    )
 
     list(data = raw_plus_meta,
          metadata = reactive(rv$data))

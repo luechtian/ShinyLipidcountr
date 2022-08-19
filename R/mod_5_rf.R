@@ -23,6 +23,7 @@ mod_5_rf_ui <- function(id, tabName){
                           fluidRow(
                             shinydashboard::box(
                               rhandsontable::rHandsontableOutput(ns("rf_values")),
+                              textOutput(ns("rf_warning")),
                               width = 12
                             )
                           ),
@@ -55,7 +56,7 @@ mod_5_rf_server <- function(id, data_blank, input_blank){
                                      dplyr::select(class, rf_values) %>%
                                      dplyr::mutate(rf_values =
                                                      round(rf_values,
-                                                                     digits = 2)
+                                                           digits = 2)
                                      ) %>%
                                      unique() %>%
                                      t(),
@@ -78,11 +79,32 @@ mod_5_rf_server <- function(id, data_blank, input_blank){
 
       })
 
+      output$rf_warning <- renderText({
+
+        if(any(is.na(rf_data$data$rf_values))){
+          stop("Some response factors are missing!")
+        }
+
+      })
+
     })
 
     observeEvent(input$omit_rf, {
 
-      rf_data$data <- data_blank
+      rf_data$data <- data_blank %>%
+        dplyr::mutate(rf_values = as.numeric(rf_values))
+
+      output$rf_check <- DT::renderDataTable({
+
+        rf_data$data
+
+      })
+
+      output$rf_warning <- renderText({
+
+        "No response factors were used."
+
+      })
 
     })
 

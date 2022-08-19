@@ -16,7 +16,6 @@ library(dplyr)
 
 ```{r}
 path <- system.file("extdata", package = "shinylipidcountr")
-
 rawdata <- read_lipidview_files(path, clean_samples = FALSE)
 
 metadata <- read_metadata(path, clean_samples = FALSE)
@@ -27,14 +26,12 @@ metadata <- read_metadata(path, clean_samples = FALSE)
 data <- rawdata %>% 
   join_metadata(metadata) %>%
   join_istd_means() %>%
-  #impute_rf() %>% 
-  #apply_rf() %>%
   intensity_to_pmol() %>%
   blank_sub() %>% 
-  #mutate(pmol_corr = pmol) %>% 
-  #combine_dag_species() %>%
-  pmol_to_uM() %>%
-  sum_same_species()
+  impute_rf() %>%
+  apply_rf() %>%
+  pmol_to_uM() #%>%
+  #sum_same_species()
 
 # removes "x" in column "sample" & "sample_name". If sample names start with a 
 # numeric, janitor puts automatically "x" before the sample name.
@@ -511,7 +508,28 @@ class_plot <- function(data){
 }
 
 class_plot(data)
+
+funs <- c(sum = sum_table,
+                ether = ether_table,
+                species = species_table,
+                species_mean = species_mean_table,
+                species_plot = species_plot)
+
+      args <- list(data = data,
+                   threshold = 1)
+
+excel_data <-
+          unique(data$class) %>%
+          purrr::map(~ funs %>% purrr::map(rlang::exec, .x, !!!args)) %>%
+          setNames(unique(data$class))
+
+wb <- openxlsx::createWorkbook()
+unique(data$class) %>%
+          purrr::map(~add_lipidclass_sheet(., excel_data, workbook = wb))
+
+openxlsx::saveWorkbook(wb, paste0("functiontest",".xlsx"), overwrite = TRUE)
 ```
+
 
 
 
