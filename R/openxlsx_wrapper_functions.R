@@ -116,44 +116,54 @@ species_plot <- function(data, lipid_class, threshold = 0.5){
 }
 
 add_lipidclass_sheet <- function(lipid_class, excel_datalist, workbook){
-  # initiate lipidclass-specific excelsheet
-  openxlsx::addWorksheet(workbook, lipid_class)
 
-  openxlsx::setColWidths(workbook, lipid_class, col = 1, widths = 20)
-  openxlsx::setColWidths(workbook, lipid_class, col = 2:99, widths = 10)
-  openxlsx::setRowHeights(workbook, lipid_class, rows = 2, heights = 50)
-  openxlsx::setRowHeights(workbook, lipid_class, rows = c(1, 3:99), heights = 15)
+  clean <- function(lipid_class){
+
+    if(stringr::str_detect(lipid_class, "[:;]")){
+      lipid_class <- stringr::str_replace(lipid_class, "[;:]", "_") %>%
+        stringr::str_replace("[;:]", "_")
+    }
+    return(lipid_class)
+  }
+
+  # initiate lipidclass-specific excelsheet
+  openxlsx::addWorksheet(workbook, clean(lipid_class))
+
+  openxlsx::setColWidths(workbook, clean(lipid_class), col = 1, widths = 20)
+  openxlsx::setColWidths(workbook, clean(lipid_class), col = 2:99, widths = 10)
+  openxlsx::setRowHeights(workbook, clean(lipid_class), rows = 2, heights = 50)
+  openxlsx::setRowHeights(workbook, clean(lipid_class), rows = c(1, 3:99), heights = 15)
 
   sum_df <- excel_datalist[[lipid_class]]$sum
   ether_df <- excel_datalist[[lipid_class]]$ether
   species_df <- excel_datalist[[lipid_class]]$species
   species_mean_df <- excel_datalist[[lipid_class]]$species_mean
 
-  ggplot2::ggsave(paste0("inst/png/",lipid_class,".png"), plot = excel_datalist[[lipid_class]]$species_plot, dpi = 300, width = 14, height = 6)
+  ggplot2::ggsave(paste0("inst/png/", clean(lipid_class), ".png"), plot = excel_datalist[[lipid_class]]$species_plot, dpi = 300, width = 14, height = 6)
 
   # First table with class-specific sum data
-  openxlsx::writeData(workbook, lipid_class, excel_datalist[[lipid_class]]$sum,
+  openxlsx::writeData(workbook, clean(lipid_class), excel_datalist[[lipid_class]]$sum,
                       startCol = 1, startRow = 2, rowNames = FALSE)
 
   # Second table with ether-information
   if (any(paste0("e", lipid_class, " [uM]") == colnames(ether_df))) {
-    openxlsx::writeData(workbook, lipid_class, ether_df[, -1],
+    openxlsx::writeData(workbook, clean(lipid_class), ether_df[, -1],
                         startCol = (1 + ncol(sum_df) + 1), startRow = 2, rowNames = FALSE)
   }
 
   # Third with class-specific mol% values
-  openxlsx::writeData(workbook, lipid_class, as.character(paste0(lipid_class, " mol%")),
+  openxlsx::writeData(workbook, clean(lipid_class), as.character(paste0(lipid_class, " mol%")),
                       startCol = 1, startRow = (nrow(sum_df) + 5))
-  openxlsx::writeData(workbook, lipid_class, species_df,
+  openxlsx::writeData(workbook, clean(lipid_class), species_df,
                       startCol = 1, startRow = (nrow(sum_df) + 6))
 
   # Fourth with class-specific mean mol% values
-  openxlsx::writeData(workbook, lipid_class, as.character(paste0(lipid_class, " average mol%")),
+  openxlsx::writeData(workbook, clean(lipid_class), as.character(paste0(lipid_class, " average mol%")),
                       startCol = 1, (nrow(sum_df) + nrow(species_df) + 9))
-  openxlsx::writeData(workbook, lipid_class, species_mean_df,
+  openxlsx::writeData(workbook, clean(lipid_class), species_mean_df,
                       startCol = 1, startRow = (nrow(sum_df) + nrow(species_df) + 10))
 
-  openxlsx::insertImage(workbook, lipid_class, paste0("inst/png/",lipid_class,".png"), units = "in", width = 14, height = 6,
+  openxlsx::insertImage(workbook, clean(lipid_class), paste0("inst/png/",clean(lipid_class),".png"), units = "in", width = 14, height = 6,
                         startRow = ((nrow(sum_df) + 2) + (nrow(species_df) + 9) + (nrow(species_mean_df) + 2)))
 
 }
@@ -274,9 +284,9 @@ add_uM_sheet <- function(data, workbook){
     tidyr::pivot_wider(names_from = sample, values_from = uM) %>%
     dplyr::mutate(species = paste(class, species),
                   species = stringr::str_replace(species, "Chol Chol", "Chol"),
-                  species = stringr::str_remove(species, "PE P-16_0 "),
-                  species = stringr::str_remove(species, "PE P-18_1 "),
-                  species = stringr::str_remove(species, "PE P-18_0 "))
+                  species = stringr::str_remove(species, "PE P-16:0 "),
+                  species = stringr::str_remove(species, "PE P-18:1 "),
+                  species = stringr::str_remove(species, "PE P-18:0 "))
 
   openxlsx::addWorksheet(workbook, "uM_table")
 
@@ -295,9 +305,9 @@ lipid_class_order <- c("sample",
                        "PC", "aPC", "ePC",
                        "LPC",
                        "PE", "aPE", "ePE",
-                       "plPE16-0", "PE P-16-0", "PE P-16_0",
-                       "plPE18-1", "PE P-18-1", "PE P-18_1",
-                       "plPE18-0", "PE P-18-0", "PE P-18_0",
+                       "plPE16-0", "PE P-16-0", "PE P-16_0", "PE P-16:0",
+                       "plPE18-1", "PE P-18-1", "PE P-18_1", "PE P-18:1",
+                       "plPE18-0", "PE P-18-0", "PE P-18_0", "PE P-18:0",
                        "PS", "aPS", "ePS",
                        "PI", "aPI", "ePI",
                        "PG", "aPG", "ePG",

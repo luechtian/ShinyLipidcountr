@@ -35,7 +35,7 @@ mod_1_raw_ui <- function(id, tabName){
                             ),
 
                             shinydashboard::box(
-                              rhandsontable::rHandsontableOutput(ns("is_check"), width = 300, height = "195"),
+                              rhandsontable::rHandsontableOutput(ns("is_check"), width = 350, height = "195"),
                               width = 3
                             )
                           ),
@@ -66,22 +66,26 @@ mod_1_raw_server <- function(id){
 
           withProgress(message = 'Merging files', style = "notification", value = 0.5, {
 
-            files <- input$files$datapath
+            # files <- input$files$datapath
+            #
+            # filenames <- input$files$name %>%
+            #   purrr::map(name_lipid_file) %>%
+            #   unlist()
+            #
+            # names(files) <- names(filenames)
+            #
+            # ##### main data #####
+            # data <- files %>%
+            #   read_txt_files() %>%
+            #   clean_txt_files(clean_samples = FALSE) %>%
+            #   tidyr::pivot_longer(
+            #     cols = c(-species, -class, -scan_name),
+            #     names_to = "sample",
+            #     values_to = "intensity")
 
-            filenames <- input$files$name %>%
-              purrr::map(name_lipid_file) %>%
-              unlist()
-
-            names(files) <- names(filenames)
-
-            ##### main data #####
-            data <- files %>%
-              read_txt_files() %>%
-              clean_txt_files(clean_samples = FALSE) %>%
-              tidyr::pivot_longer(
-                cols = c(-species, -class, -scan_name),
-                names_to = "sample",
-                values_to = "intensity")
+            data <- input$files$datapath %>%
+              read_lipidview_files() %>%
+              clean_lipidview_files()
 
           })
 
@@ -92,7 +96,9 @@ mod_1_raw_server <- function(id){
 
           data <- input$files$datapath %>%
             read_lipidxplorer_files() %>%
-            clean_lipidxplorer_files(clean_samples = FALSE)
+            clean_lipidxplorer_files(clean_samples = FALSE) %>%
+            dplyr::select(class, species, sample, intensity) %>%
+            dplyr::distinct()
         }
 
         # LV / LX files combined
@@ -106,23 +112,28 @@ mod_1_raw_server <- function(id){
               clean_lipidxplorer_files(clean_samples = FALSE)
 
 
+            # ## LipidView files
+            # files <- input$files$datapath
+            #
+            # filenames <- input$files$name %>%
+            #   purrr::map(name_lipid_file) %>%
+            #   unlist()
+            #
+            # names(files) <- names(filenames)
+            #
+            # ##### main data #####
+            # lv_data <- files %>%
+            #   read_txt_files() %>%
+            #   clean_txt_files(clean_samples = FALSE) %>%
+            #   tidyr::pivot_longer(
+            #     cols = c(-species, -class, -scan_name),
+            #     names_to = "sample",
+            #     values_to = "intensity")
+
             ## LipidView files
-            files <- input$files$datapath
-
-            filenames <- input$files$name %>%
-              purrr::map(name_lipid_file) %>%
-              unlist()
-
-            names(files) <- names(filenames)
-
-            ##### main data #####
-            lv_data <- files %>%
-              read_txt_files() %>%
-              clean_txt_files(clean_samples = FALSE) %>%
-              tidyr::pivot_longer(
-                cols = c(-species, -class, -scan_name),
-                names_to = "sample",
-                values_to = "intensity")
+            lv_data <-  input$files$datapath %>%
+              read_lipidview_files() %>%
+              clean_lipidview_files()
 
             # If samples names from LipidView and LipidXplorer are not the same
             # check_sample_names-function will stop the process!

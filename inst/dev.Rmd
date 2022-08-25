@@ -206,9 +206,7 @@ exp_queue <- raw_data %>%
 raw_data_lx <-  
   system.file("extdata", "lx-out.csv", package = "shinylipidcountr") %>% 
   read_lipidxplorer_files() %>%
-  clean_lipidxplorer_files(clean_samples = FALSE) %>%
-          dplyr::rename(scan_name = molecular_species) %>%
-          dplyr::select(class, species, scan_name, sample, intensity)
+  clean_lipidxplorer_files(clean_samples = FALSE)
 
 ## LipidView
 raw_data_lv <- 
@@ -458,7 +456,7 @@ stringr::str_detect(snakecase::to_any_case(
 ```
 
 
-```{r}
+```{r openxlsx classplot}
 class_plot <- function(data){
   
   plot_data <- data %>%
@@ -531,6 +529,111 @@ openxlsx::saveWorkbook(wb, paste0("functiontest",".xlsx"), overwrite = TRUE)
 ```
 
 
+```{r}
 
+raw_data <- 
+  system.file("extdata/LipidView_reports_old", package = "shinylipidcountr") %>%
+  list.files(pattern = ".txt", full.names = TRUE) %>%
+  as.list() %>% 
+  purrr::map(read.table, skip = 1, header = TRUE, sep = "\t", check.names = F) %>% 
+  purrr::map(~ dplyr::rename(.[-1, -(2:4)], "mz" = 1, "species" = 2, "scan_name" = 3)) %>% 
+  purrr::reduce(merge, all = TRUE, sort = FALSE)
+
+  
+
+raw_data2 <- raw_data %>%
+  dplyr::mutate(class = stringr::str_remove_all(species, "IS "),
+                class = stringr::str_remove_all(class, "D[0-9]-"),
+                class = purrr::map(stringr::str_split(class, " ", n = 2), 1))
+              
+  
+  
+  
+  dplyr::mutate(species = stringr::str_remove_all(species, "\\+NH4"),
+                species = ifelse(
+                  class != species,
+                  stringr::str_remove_all(species, paste0(class, " ")),
+                  species),
+                scan_name = stringr::str_remove(scan_name, "\\(-FA "),
+                scan_name = stringr::str_remove(scan_name, "\\)"),
+                scan_name = stringr::str_remove(scan_name, "\\("))
+```
+
+
+```{r}
+raw_data_lv <- 
+  # merge
+  system.file("extdata", package = "shinylipidcountr") %>%
+  list.files(pattern = ".txt", full.names = TRUE) %>%
+  as.list() %>% 
+  purrr::map(read.table, header = TRUE, sep = "\t", check.names = F) %>%  
+  purrr::map(~ dplyr::rename(.[-1,], species = `Sample Name`)) %>% 
+  purrr::reduce(merge, all = TRUE, sort = FALSE) %>% 
+  # long format
+  tidyr::pivot_longer(cols = -species,
+                      names_to = "sample",
+                      values_to = "intensity") %>% 
+  # clean up
+  dplyr::mutate(class = stringr::str_extract(species, "(?<=\\().+?(?=\\))"),
+                species = stringr::str_remove(species, "\\((.*?)\\)"),
+                species = ifelse(
+                      class != species,
+                      stringr::str_remove_all(species, paste0(class, " ")),
+                      species),
+                intensity = as.numeric(intensity)) %>% 
+  dplyr::select(class, species, tidyr::everything())
+
+test <- raw_data %>% 
+  join_metadata(test_metadata) %>% 
+  join_istd_means() %>%
+  intensity_to_pmol() %>%
+  blank_sub() %>% 
+  impute_rf(blank_sub = TRUE, kon = "Kon") %>% 
+  apply_rf() %>% 
+  pmol_to_uM()
+```
+
+
+```{r}
+read_lipidview_files <- function(path){
+  as.list(path) %>% 
+  purrr::map(read.table, header = TRUE, sep = "\t", check.names = F) %>%  
+  purrr::map(~ dplyr::rename(.[-1,], species = `Sample Name`)) %>% 
+  purrr::reduce(merge, all = TRUE, sort = FALSE)
+}
+
+clean_lipidview_files <- function(rawdata){
+  # long format
+  rawdata %>% 
+    tidyr::pivot_longer(cols = -species,
+                        names_to = "sample",
+                        values_to = "intensity") %>% 
+    # clean up
+    dplyr::mutate(class = stringr::str_extract(species, "(?<=\\().+?(?=\\))"),
+                  species = stringr::str_remove(species, "\\((.*?)\\)"),
+                  species = ifelse(
+                    class != species,
+                    stringr::str_remove_all(species, paste0(class, " ")),
+                    species),
+                   intensity = as.numeric(intensity)) %>% 
+    dplyr::select(class, species, tidyr::everything())
+}
+
+data <- system.file("extdata", package = "shinylipidcountr") %>%
+  list.files(pattern = ".txt", full.names = TRUE) %>% 
+  read_lipidview_files() %>% 
+  clean_lipidview_files() %>% 
+  join_metadata(test_metadata) %>% 
+  join_istd_means() %>%
+  intensity_to_pmol() %>%
+  blank_sub() %>% 
+  impute_rf(blank_sub = TRUE, kon = "Kon") %>% 
+  apply_rf() %>% 
+  pmol_to_uM()
+
+stringr::str_replace("SM 23:3;2", "[;:]", "_") %>% 
+  stringr::str_replace("[;:]", "_")
+
+```
 
 
