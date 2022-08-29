@@ -297,33 +297,3 @@ add_uM_sheet <- function(data, workbook){
 
 }
 
-
-
-# Lipid class order
-lipid_class_order <- c("sample",
-                       "sample_input",
-                       "PC", "aPC", "ePC",
-                       "LPC",
-                       "PE", "aPE", "ePE",
-                       "plPE16-0", "PE P-16-0", "PE P-16_0", "PE P-16:0",
-                       "plPE18-1", "PE P-18-1", "PE P-18_1", "PE P-18:1",
-                       "plPE18-0", "PE P-18-0", "PE P-18_0", "PE P-18:0",
-                       "PS", "aPS", "ePS",
-                       "PI", "aPI", "ePI",
-                       "PG", "aPG", "ePG",
-                       "PA", "aPA", "ePA",
-                       "SM",
-                       "Cer",
-                       "tCer",
-                       "HexCer", "GlcCer",
-                       "Hex2Cer", "LacCer",
-                       "Hex3Cer",
-                       "GM3", "GM2", "GM1",
-                       "EE",
-                       "SAA", "Ergo",
-                       "CA", "Chol",
-                       "CE",
-                       "DAG", "DG",
-                       "TAG", "TG",
-                       "sum [uM]",
-                       "sum [pmol]")

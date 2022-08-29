@@ -7,13 +7,9 @@ test_raw_data_lx <-
 #---- Tibble: test_raw_data_lv ----
 test_raw_data_lv <-
   system.file("extdata", package = "shinylipidcountr") %>%
-  shinylipidcountr::list_txt_files() %>%
-  shinylipidcountr::read_txt_files() %>%
-  shinylipidcountr::clean_txt_files(clean_samples = FALSE) %>%
-  tidyr::pivot_longer(
-    cols = c(-species, -class, -scan_name),
-    names_to = "sample",
-    values_to = "intensity")
+  list.files(pattern = ".txt", full.names = TRUE) %>%
+  shinylipidcountr::read_lipidview_files() %>%
+  shinylipidcountr::clean_lipidview_files()
 
 #---- Tibble: test_raw_data ----
 ## Merged tibble: raw_data_lx & raw_data_lv

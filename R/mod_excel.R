@@ -89,6 +89,7 @@ mod_excel_server <- function(id, uM_data, metadata){
       ##### Excel sheet order #####
       excel_sheet_order <- c("metadata",
                              lipid_class_order[lipid_class_order %in% openxlsx::sheets(wb)],
+                             openxlsx::sheets(wb)[!openxlsx::sheets(wb) %in% lipid_class_order],
                              "summary",
                              "uM_table"
       )

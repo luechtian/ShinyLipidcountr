@@ -1,0 +1,13 @@
+name: ShinyLipidcountr_alpha2
+title: ShinyLipidcountr_alpha2
+username:
+account: lipidomicsheidelberg
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 6848542
+bundleId: 6237670
+url: https://lipidomicsheidelberg.shinyapps.io/ShinyLipidcountr_alpha2/
+when: 1661443897.63709
+lastSyncTime: 1661443897.63709
+asMultiple: FALSE
+asStatic: FALSE

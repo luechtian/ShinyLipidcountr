@@ -1,11 +1,10 @@
-#' Vector with lipid class abbreviations
+#' Vector with Excelsheet names
 #'
-#' A \code{vector} containing lipid classes that is for parsing
-#' titles of LipidView text files. This vector will be used by function
-#'  \code{name_lipid_file()}.
+#' A \code{vector} containing strings to set the order of sheets in the
+#' Excelworkbook.
 #'
-#' @format A \code{vector} with 59 elements
-"lipid_classes"
+#' @format A \code{vector} with 71 elements
+"lipid_class_order"
 
 
 #' Tibble with merged lipidomics data from LipidView and LipidXplorer
@@ -16,7 +15,6 @@
 #' \describe{
 #'   \item{class}{lipid class abbreviation}
 #'   \item{species}{lipid species, IS x:y;z, IS = internal standard, x = c-atoms, y = double bonds, z = hydroxilation grade}
-#'   \item{scan_name}{precursor ion scan, if Qtrap data or molecular species, if QE data}
 #'   \item{sample}{sample name/number according to sample entry sheet}
 #'   \item{intensity}{peak intensity, in cps}
 #' }
@@ -31,7 +29,6 @@
 #' \describe{
 #'   \item{class}{lipid class abbreviation}
 #'   \item{species}{lipid species, IS x:y;z, IS = internal standard, x = c-atoms, y = double bonds, z = hydroxilation grade}
-#'   \item{scan_name}{precursor ion scan}
 #'   \item{sample}{sample name/number according to sample entry sheet}
 #'   \item{intensity}{peak intensity, in cps}
 #' }
