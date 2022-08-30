@@ -2,16 +2,12 @@
 #' Compares sample names from LipidView and LipidXplorer. If names are not
 #' identical, check_sample_names() will stop the process
 #'
-#' @param data tibble. Data table containing LipidView or LipidXplorer data
-#' @param column string. Name of the sample column
+#' @param data1 tibble. Data table containing LipidView or LipidXplorer data
+#' @param data2 tibble. Data table containing LipidView or LipidXplorer data
 #' @param ignore string. Pattern to ignore e.g. "kon" -> Ignores Kon A, B and C
 #'
 #' @return vector
 #' @export
-#'
-#' @examples
-#' get_samples(
-#'
 check_sample_names <- function(data1, data2, ignore = "kon"){
 
   check <- setequal(
@@ -33,7 +29,7 @@ check_sample_names <- function(data1, data2, ignore = "kon"){
             ". Please adjust before continuing.")
     )
 
-  }
+  } else{message("Sample names check passed!")}
 
 }
 
@@ -48,8 +44,7 @@ check_sample_names <- function(data1, data2, ignore = "kon"){
 #' @export
 #'
 #' @examples
-#'
-#'
+#' get_samples(test_raw_data)
 get_samples <- function(data, column = "sample", ignore = "kon"){
 
   samples <- dplyr::pull(data, column) %>% unique()

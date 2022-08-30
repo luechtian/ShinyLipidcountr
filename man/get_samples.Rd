@@ -19,3 +19,6 @@ vector
 \description{
 Subsets all samples from data without controls
 }
+\examples{
+get_samples(test_raw_data)
+}

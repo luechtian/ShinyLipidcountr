@@ -31,7 +31,8 @@ mod_1_raw_ui <- function(id, tabName){
 
                               actionButton(ns("calc"),"Start Upload"),
 
-                              actionButton(ns("rmv_is"), "Confirm Internal standards")
+                              actionButton(ns("rmv_is"), "Confirm Internal standards"),
+                              textOutput(ns("check_raw")),
                             ),
 
                             shinydashboard::box(
@@ -137,7 +138,8 @@ mod_1_raw_server <- function(id){
 
             # If samples names from LipidView and LipidXplorer are not the same
             # check_sample_names-function will stop the process!
-            check_sample_names(lv_data, lx_data)
+
+            output$check_raw <- renderText({ check_sample_names(lv_data, lx_data) })
 
             data <-  merge_with_lipidview(lx_data, lv_data)
 

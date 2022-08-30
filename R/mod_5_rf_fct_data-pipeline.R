@@ -38,12 +38,12 @@ impute_rf <- function(raw_data, blank_sub = TRUE, kon = "Kon"){
 
 }
 
-
+#' @importFrom rlang .data
 apply_rf <- function(raw_data){
 
   if(length(raw_data) > 0){
     raw_data %>%
-      dplyr::mutate(pmol_corr = pmol_corr *rf_values)
+      dplyr::mutate(pmol_corr = .data$pmol_corr * .data$rf_values)
   }
 
 }

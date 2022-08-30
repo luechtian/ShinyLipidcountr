@@ -5,21 +5,22 @@
 \title{Compares sample names from metadata file and rawdata. If names are not
 identical, check_raw_meta() will stop the process}
 \usage{
-check_raw_meta(raw, meta, ignore = "")
+check_raw_meta(raw, metadata, ignore = "")
 }
 \arguments{
 \item{raw}{tibble. Data table containing LipidView and/or LipidXplorer data}
 
-\item{meta}{data.frame. Data table containing metadata}
+\item{metadata}{data.frame. Data table containing metadata}
 
 \item{ignore}{string. Pattern to ignore e.g. "kon" -> Ignores Kon A, B and C}
-
-\item{column}{string. Name of the sample column}
 }
 \value{
-vector
+warning- or errormessage if sample names dont match.
 }
 \description{
 Compares sample names from metadata file and rawdata. If names are not
 identical, check_raw_meta() will stop the process
+}
+\examples{
+check_raw_meta(test_raw_data, test_metadata)
 }

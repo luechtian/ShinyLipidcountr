@@ -18,6 +18,4 @@ test_raw_data <- shinylipidcountr::merge_with_lipidview(test_raw_data_lx,
 
 
 usethis::use_data(test_raw_data,
-                  test_raw_data_lv,
-                  test_raw_data_lx,
                   overwrite = TRUE)

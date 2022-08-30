@@ -1,6 +1,19 @@
-# Extract all internal standard rows, calculate the mean for each class/sample
-# and join the mean-data to the rawdata
-# at the end, get rid off internal standard rows
+# join_istd_means---------------------------------------------------------------
+#' Join averaged IS intensities to samples by class-column
+#'
+#' @description join_istd_means() extracts all rows with "IS" in
+#' 'species'-column and calculates the mean of same lipidclass-standards.
+#' Afterwards these intensity-means are joined by 'class' and 'sample' in column
+#' 'is_intensity'
+#'
+#' @param raw_data tibble. Joined raw and metadata table.
+#'
+#' @return tibble
+#' @export
+#'
+#' @examples
+#' join_metadata(test_raw_data, test_metadata) %>%
+#'   join_istd_means()
 join_istd_means <- function(raw_data){
 
   # Extract the intensities of internal standards and
@@ -16,7 +29,23 @@ join_istd_means <- function(raw_data){
 
 }
 
-# [intensities] to [pmol]
+# intensity_to_pmol-------------------------------------------------------------
+#' Calculate pmol values
+#'
+#' @description intensity_to_pmol() calculates pmol-values from intensity of
+#' endogenous lipid species, intensity-mean of the class-specific internal
+#' standard and the internal standard concentration in pmol.
+#' (standard_input / is_intensity) * intensity)
+#'
+#' @param raw_data tibble. Comes after join_istd_means()
+#'
+#' @return tibble
+#' @export
+#'
+#' @examples
+#' join_metadata(test_raw_data, test_metadata) %>%
+#'   join_istd_means() %>%
+#'   intensity_to_pmol()
 intensity_to_pmol <- function(raw_data){
 
   raw_data %>%

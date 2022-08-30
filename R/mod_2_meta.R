@@ -68,16 +68,13 @@ mod_2_meta_server <- function(id, data_raw, input_raw, r6) {
 
     observeEvent(input$meta_file,{
 
-      rv$data <- read.csv(input$meta_file$datapath, check.names = FALSE) #%>%
-        #janitor::clean_names()                                                 # reactivate if clean_txt_files(clean_samples = TRUE)
+      rv$data <- read.csv(input$meta_file$datapath, check.names = FALSE)
 
       output$metadata <- rhandsontable::renderRHandsontable({
 
         rhandsontable::rhandsontable(read.csv(input$meta_file$datapath,
-                                              check.names = FALSE) #%>%
-                                     #janitor::clean_names()                    # reactivate if clean_txt_files(clean_samples = TRUE)
-                                     ) #%>%
-          #rhandsontable::hot_col(col = "class", readOnly = TRUE)
+                                              check.names = FALSE)
+                                     )
 
       })
 

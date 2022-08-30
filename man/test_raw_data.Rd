@@ -9,7 +9,6 @@ A data frame with 9546 rows and 5 variables:
 \describe{
   \item{class}{lipid class abbreviation}
   \item{species}{lipid species, IS x:y;z, IS = internal standard, x = c-atoms, y = double bonds, z = hydroxilation grade}
-  \item{scan_name}{precursor ion scan, if Qtrap data or molecular species, if QE data}
   \item{sample}{sample name/number according to sample entry sheet}
   \item{intensity}{peak intensity, in cps}
 }

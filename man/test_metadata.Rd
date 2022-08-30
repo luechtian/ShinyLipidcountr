@@ -5,7 +5,7 @@
 \alias{test_metadata}
 \title{Data frame with experimental data from lipid extraction}
 \format{
-A data frame with 18 rows and 23 variables:
+A data frame with 21 rows and 23 variables:
 \describe{
   \item{class}{lipid class abbreviation for the internal standards}
   \item{rf_values}{response factors}

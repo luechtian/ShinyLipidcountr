@@ -7,7 +7,7 @@
 check_blank(data_pmol)
 }
 \arguments{
-\item{data}{tibble. Data table containing LipidView and/or LipidXplorer data. Already merged with metadata.}
+\item{data_pmol}{tibble. Data table containing LipidView and/or LipidXplorer data. Already merged with metadata.}
 }
 \value{
 vector
