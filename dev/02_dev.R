@@ -15,11 +15,11 @@
 
 ## Dependencies ----
 ## Add one line by package you want to add as dependency
-usethis::use_package( "rlang" )
+usethis::use_package( "plotly" )
 
 ## Add modules ----
 ## Create a module infrastructure in R/
-golem::add_module( name = "2_meta" ) # Name of the module
+golem::add_module( name = "7_filter" ) # Name of the module
 golem::add_module( name = "excel" ) # Name of the module
 
 ## Add helper functions ----

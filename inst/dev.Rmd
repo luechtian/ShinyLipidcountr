@@ -631,12 +631,184 @@ data <- system.file("extdata", package = "shinylipidcountr") %>%
   apply_rf() %>% 
   pmol_to_uM()
 
-stringr::str_replace("SM 23:3;2", "[;:]", "_") %>% 
-  stringr::str_replace("[;:]", "_")
 
 ```
 
-```{r}
+```{r plotly}
+# species_plot(data, "PC")
+lipid_class <- "SM"
+threshold <- 0.5
 
+plot_data <- data %>%
+    dplyr::filter(class == lipid_class) %>%
+    dplyr::group_by(class, sample, group) %>%
+    dplyr::mutate(mol_percent = uM * 100 / sum(uM)) %>%
+    dplyr::group_by(species, group) %>%
+    dplyr::mutate(sd = sd(mol_percent),
+                  mean_mol_percent = mean(mol_percent),
+                  ###
+                  ###--- to keep width of cols, all values become 0 if < 0.5%
+                  mean_mol_percent_filter = dplyr::if_else(mean_mol_percent <= threshold,
+                                                           0,
+                                                           mean_mol_percent)) %>%
+    dplyr::group_by(species) %>%
+    dplyr::mutate(sum_filter = sum(mean_mol_percent_filter)) %>%
+    dplyr::filter(sum_filter != 0)
+
+gg <- ggplot2::ggplot(plot_data, ggplot2::aes(x = factor(species, levels = plot_data$species %>% unique()),
+                                 y = mean_mol_percent,
+                                 fill = group)) +
+    ggplot2::geom_col(color = "black",
+                      width = 0.9,
+                      position = ggplot2::position_dodge()) +
+    ggplot2::ggtitle(paste(lipid_class, paste0("species profile (> ", threshold ," mol%)"))) +
+    ggplot2::xlab("Lipid species") +
+    ggplot2::ylab("Mean mol %") +
+    ggplot2::labs(fill = "") + # removes legend title ("group")
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45),
+                   plot.title = ggplot2::element_text(hjust = 0.5)) +
+    ggplot2::geom_errorbar(ggplot2::aes(ymin = mean_mol_percent - sd,
+                                        ymax = mean_mol_percent + sd),
+                           width = 0.8,
+                           size = 0.05,
+                           position = ggplot2::position_dodge(0.9),
+                           show.legend = FALSE) +
+  ggplot2::guides(color = FALSE, size = FALSE) +
+  ggplot2::geom_point(
+        ggplot2::aes( y = mol_percent,
+                      text = purrr::map(paste('<b>amount:</b>',
+                             sprintf("%.2f %%", mol_percent),
+                             '<br>',
+                             '<b>replicate:</b>',
+                             sample),
+                       HTML)),
+        position    = ggplot2::position_dodge(width = 0.9),
+        pch         = 21,
+        alpha       = 1,
+        color       = "black",
+        show.legend = FALSE
+      ) # removes geom_point-legend
+
+plotly::ggplotly(gg, tooltip = "text") %>%
+  plotly::style(
+          marker.size = 3,
+          marker.line = list(width = 0.5)) %>% 
+  plotly::layout(
+    xaxis = list(tickfont = list(size = 15)),
+    yaxis = list(tickfont = list(size = 15))) %>% 
+  plotly::config(displayModeBar = FALSE)
+```
+
+```{r cond formatting example}
+library(shiny)
+library(tidyverse)
+library(rhandsontable)
+
+# basic user interface (not important here)
+ui <- fluidPage(
+  rHandsontableOutput(outputId = "ex")
+)
+
+# server side calculations
+server <- function(input, output, session) {
+  # create the rhandsontable object and define conditional formatting
+  output$ex = renderRHandsontable({
+    # create a dummy dataset
+    ex_data = data.frame(id = letters[1:3],
+                         attr1 = c(0.5, 0.4, 0.3),
+                         attr2 = c(0.6, 0.3, 0.1))
+    #create index with columns sum is equal to 1
+    col_highlight <- unname(which(colSums(ex_data[c(2,3)])==1))
+
+    rhandsontable(ex_data, col_highlight = col_highlight,
+                  width = 550, height = 300) %>%
+      hot_cols(renderer = "
+    function(instance, td, row, col, prop, value, cellProperties) {
+      Handsontable.renderers.NumericRenderer.apply(this, arguments);
+
+      if (instance.params) {
+            hcols = instance.params.col_highlight;
+            hcols = hcols instanceof Array ? hcols : [hcols];
+          }
+
+      if (instance.params && hcols.includes(col)) {
+        td.style.background = 'lightgreen';
+      }
+  }")
+  })
+
+}
+shinyApp(ui,server)
+
+```
+
+```{r hot cond formatting}
+library(shiny)
+library(rhandsontable)
+
+DF <- readRDS(system.file("extdata/lx_false_pos.rds", package = "shinylipidcountr")) %>% 
+  dplyr::select(class, chemical_species, molecular_species, lipid_category,
+                tidyselect::contains("all_"), tidyselect::contains("num_"))
+
+
+dplyr::mutate(DF, all_under_threshold_fullms = as.character(all_under_threshold_fullms),
+              all_under_threshold_ms2 = as.character(all_under_threshold_ms2),
+              all_groups_under_threshold = as.character(all_groups_under_threshold),
+              all_groups_under_threshold_ms2 = as.character(all_groups_under_threshold_ms2)
+              )
+
+app <- shinyApp(
+  
+  ui = fluidPage(
+    rHandsontableOutput("hot"),
+    checkboxInput(inputId = "a_u_t_fullms", label = "All under threshold [FullMS]", value = TRUE)
+  ),
+  
+  server = function(input, output) {
+
+    output$hot <- renderRHandsontable({
+      
+      myindex <- c(which(DF[,c(5)]  == TRUE),   # all_under_threshold_fullms
+                   which(DF[,c(6)]  == TRUE),   # all_under_threshold_ms2
+                   which(DF[,c(7)]  == TRUE),   # all_groups_under_threshold
+                   which(DF[,c(8)]  == TRUE),   # all_groups_under_threshold_ms2
+                   which(DF[,c(9)]  >= 16),     # num_under_threshold_fullms
+                   which(DF[,c(10)]  >= 16)     # num_under_threshold_ms2
+                   ) -1 
+      
+      rhandsontable(dplyr::mutate(DF, across(everything(), as.character)),
+                    myindex = myindex
+      ) %>%
+        hot_cols(renderer = 
+        "function(instance, td, row, col, prop, value, cellProperties) {
+          
+          Handsontable.renderers.TextRenderer.apply(this, arguments);
+          
+          if (instance.params) {
+            mhrows = instance.params.myindex;
+            mhrows = mhrows instanceof Array ? mhrows : [mhrows];
+          }
+          if (instance.params && mhrows.includes(row)) {
+            td.style.background = 'pink';
+          }
+          if (value == 'TRUE') {
+           td.style.background = 'lightblue';
+          }
+          if (value >= 16) {
+           td.style.background = 'lightblue';
+          }
+          
+        }"
+        )
+  })
+    }
+        )
+runApp(app)
+```
+
+```{r}
+false_pos <- DF[(myindex + 1),]
+
+data2 <- data %>% filter(!species %in% false_pos$chemical_species)
 ```
 

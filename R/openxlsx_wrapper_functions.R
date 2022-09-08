@@ -69,7 +69,67 @@ species_mean_table <- function(data, lipid_class, threshold){
     dplyr::rename(" " = group)
 }
 
-species_plot <- function(data, lipid_class, threshold = 0.5){
+species_plot <- function(data, lipid_class, threshold = 0.5, errorbars = TRUE){
+
+  gg_errorbars <- function(plt){
+
+    plt +
+      ggplot2::geom_errorbar(ggplot2::aes(ymin = mean_mol_percent - sd,
+                                          ymax = mean_mol_percent + sd),
+                             width = 0.6,
+                             size = 0.5,
+                             position = ggplot2::position_dodge(0.9))
+  }
+
+  plot_data <- data %>%
+    dplyr::filter(class == lipid_class) %>%
+    dplyr::group_by(class, sample, group) %>%
+    dplyr::mutate(mol_percent = uM * 100 / sum(uM)) %>%
+    dplyr::group_by(species, group) %>%
+    dplyr::mutate(sd = sd(mol_percent),
+                  mean_mol_percent = mean(mol_percent),
+                  ###
+                  ###--- to keep width of cols, all values become 0 if < 0.5%
+                  mean_mol_percent_filter = dplyr::if_else(mean_mol_percent <= threshold,
+                                                           0,
+                                                           mean_mol_percent)) %>%
+    dplyr::group_by(species) %>%
+    dplyr::mutate(sum_filter = sum(mean_mol_percent_filter)) %>%
+    dplyr::filter(sum_filter != 0)
+    ###--- and if sum of all sample of a species = 0, this species will be removed
+    ###
+    plt <- ggplot2::ggplot(plot_data,
+                           ggplot2::aes(x = factor(species, levels = plot_data$species %>% unique()),
+                                        y = mean_mol_percent,
+                                        fill = group)) +
+    ggplot2::geom_col(color = "black",
+                      width = 0.9,
+                      position = ggplot2::position_dodge()) +
+    ggplot2::ggtitle(paste(lipid_class, paste0("species profile (> ", threshold ," mol%)"))) +
+    ggplot2::xlab("Lipid species") +
+    ggplot2::ylab("Mean mol %") +
+    ggplot2::labs(fill = "") + # removes legend title ("group")
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45),
+                   plot.title = ggplot2::element_text(hjust = 0.5)) +
+    ggplot2::geom_point(
+      ggplot2::aes(
+        y = mol_percent,
+        text = purrr::map(paste(sample_name,
+                                '<br>',
+                                sprintf("%.2f mol%%", mol_percent)),
+                          HTML)),
+      position    = ggplot2::position_dodge(width = 0.9),
+      pch         = 21,
+      alpha       = 1,
+      color       = "black",
+      show.legend = FALSE) +
+    ggplot2::guides(color = FALSE, size = FALSE) # removes geom_point-legend
+
+  if(errorbars == TRUE){gg_errorbars(plt)} else {plt}
+
+}
+
+species_plot_excel <- function(data, lipid_class, threshold = 0.5){
   data %>%
     dplyr::filter(class == lipid_class) %>%
     dplyr::group_by(class, sample, group) %>%
@@ -181,7 +241,7 @@ add_summary_sheet <- function(data, workbook){
 
   mol_percent_table <- excel_class_profile_percent(data = data)
 
-  ggplot2::ggsave("inst/png/summary.png", plot = class_plot(data), dpi = 300, width = 14, height = 6)
+  ggplot2::ggsave("inst/png/summary.png", plot = class_plot_excel(data), dpi = 300, width = 14, height = 6)
 
   openxlsx::writeData(workbook, "summary", uM_table, startCol = 1, startRow = 2, rowNames = FALSE)
   openxlsx::writeData(workbook, "summary", mol_percent_table, startCol = 1, startRow = (nrow(uM_table) + 5), rowNames = FALSE)
@@ -229,7 +289,66 @@ excel_class_profile_percent <- function(data){
     dplyr::select(lipid_class_order[lipid_class_order %in% colnames(.)])
 }
 
-class_plot <- function(data){
+class_plot <- function(data, errorbars = TRUE){
+
+  gg_errorbars <- function(plt){
+
+    plt +
+      ggplot2::geom_errorbar(ggplot2::aes(ymin = mean_mol_percent - sd,
+                                          ymax = mean_mol_percent + sd),
+                             width = 0.6,
+                             size = 0.5,
+                             position = ggplot2::position_dodge(0.9))
+  }
+
+  plot_data <- data %>%
+    dplyr::group_by(class) %>%
+    dplyr::mutate(ether = stringr::str_detect(species, "O-"),
+                  diacyl = any(ether)) %>%
+    dplyr::group_by(class, sample_name, group, ether, diacyl, sample_input) %>%
+    dplyr::summarise(uM = sum(uM), .groups = "drop") %>%
+    dplyr::mutate(class = ifelse(ether == TRUE, paste0("e", class), class),
+                  class = ifelse(diacyl == TRUE & ether == FALSE,
+                                 paste0("a", class), class)) %>%
+    dplyr::select(-ether, -diacyl) %>%
+    dplyr::group_by(sample_name) %>%
+    dplyr::mutate(mol_percent = uM * 100 / sum(uM)) %>%
+    dplyr::group_by(class, group) %>%
+    dplyr::mutate(sd = sd(mol_percent),
+                  mean_mol_percent = mean(mol_percent))
+
+  plt <- plot_data %>%
+    ggplot2::ggplot(ggplot2::aes(x = class,
+                                 y = mean_mol_percent,
+                                 fill = group)) +
+    ggplot2::geom_col(color = "black",
+                      width = 0.9,
+                      position = ggplot2::position_dodge()) +
+    ggplot2::ggtitle("Lipid class profile") +
+    ggplot2::xlab("Lipid classes") +
+    ggplot2::ylab("Percentage / total lipids") +
+    ggplot2::labs(fill = "") + # removes legend title ("group")
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45),
+                   plot.title = ggplot2::element_text(hjust = 0.5)) +
+    ggplot2::geom_point(
+      ggplot2::aes(
+        y = mol_percent,
+        text = purrr::map(paste(sample_name,
+                                '<br>',
+                                sprintf("%.2f mol%%", mol_percent)),
+                          HTML)),
+      position    = ggplot2::position_dodge(width = 0.9),
+      pch         = 21,
+      alpha       = 1,
+      color       = "black",
+      show.legend = FALSE) +
+    ggplot2::scale_x_discrete(limits = lipid_class_order[lipid_class_order %in% plot_data$class]) +
+    ggplot2::guides(color = "none", size = "none") # removes geom_point-legend
+
+  if(errorbars == TRUE){gg_errorbars(plt)} else {plt}
+}
+
+class_plot_excel <- function(data){
 
   plot_data <- data %>%
     dplyr::group_by(class) %>%

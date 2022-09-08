@@ -30,7 +30,8 @@ Imports:
     stringr,
     thinkr,
     tidyr,
-    tidyselect
+    tidyselect,
+    plotly
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.1

@@ -45,7 +45,7 @@ mod_excel_server <- function(id, uM_data, metadata){
                 ether = ether_table,
                 species = species_table,
                 species_mean = species_mean_table,
-                species_plot = species_plot)
+                species_plot = species_plot_excel)
 
       args <- list(data = uM_data(),
                    threshold = input$plot_threshold)

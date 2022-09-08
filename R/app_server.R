@@ -38,7 +38,10 @@ app_server <- function( input, output, session ) {
   ## pmol to uM
   uM <- mod_6_uM_server("uM_ui_1", pmol_rf$data())
 
+  ## Filter
+  filter <- mod_7_filter_server("filter_ui_1", uM$data)
+
   ## Excel
-  mod_excel_server("excel_ui_1", uM$data, meta$metadata)
+  mod_excel_server("excel_ui_1", filter$data, meta$metadata)
 
 }

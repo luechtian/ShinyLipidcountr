@@ -58,8 +58,7 @@ mod_6_uM_server <- function(id, data_rf){
 
     output$uM_check <- DT::renderDataTable({uM_data()})
 
-    list(data = uM_data,
-         input_calc_pmol = reactive(input$calc_uM))
+    list(data = uM_data)
 
   })
 }

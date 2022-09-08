@@ -24,7 +24,10 @@ app_ui <- function(request) {
                                                              tabName = "rf"),
                                  shinydashboard::menuSubItem("pmol to uM",
                                                              tabName = "uM")),
-        shinydashboard::menuItem("4 Excel", tabName = "excel", icon = icon("file-excel"))
+
+        shinydashboard::menuItem("4 Data Filtering", tabName = "filter", icon = icon("filter")),
+
+        shinydashboard::menuItem("5 Excel", tabName = "excel", icon = icon("file-excel"))
       )
     ),
 
@@ -48,6 +51,9 @@ app_ui <- function(request) {
 
         ##--- uM-subtab content ----
           mod_6_uM_ui("uM_ui_1", tabName = "uM"),
+
+        #---- filter-tab content ----
+        mod_7_filter_ui("filter_ui_1", tabName = "filter"),
 
         #---- excel-tab content ----
         mod_excel_ui("excel_ui_1", tabName = "excel")
