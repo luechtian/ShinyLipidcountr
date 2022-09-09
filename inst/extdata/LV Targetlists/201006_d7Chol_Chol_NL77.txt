@@ -1,0 +1,9 @@
+___Reference Peak Information								
+IS D7-Chol	453.4430	77.00	Positive	Chol	Chol	453.4_77.00_Positive		1.396
+___Internal Standard Information								
+Use reference peaks for all tests:	0							
+___Target Lipid Information								
+Chol	446.4000	77.00	Positive	Chol	Chol	446.4_77.00_Positive		1.391
+___Processing Information								
+Units for Internal standard	ng							
+Units for Results								

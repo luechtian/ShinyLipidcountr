@@ -1,0 +1,29 @@
+___Reference Peak Information								
+IS D7-PC 33:1	753.7	184	Positive	PC	PC	PC 33:1		1.6232
+IS PC 40:0	846.7	184	Positive	PC	PC	PC 40:0		1.757
+IS PC 42:0	874.8	184	Positive	PC	PC	PC 42:0		1.797
+___Internal Standard Information								
+Use reference peaks for all tests:	0							
+___Target Lipid Information								
+PC 26:1	648.5	184	Positive	PC	PC	PC 26:1		1.5
+PC 28:1	676.5	184	Positive	PC	PC	PC 28:1		1.534
+PC 28:0	678.5	184	Positive	PC	PC	PC 28:0		1.535
+PC 30:2	702.5	184	Positive	PC	PC	PC 30:2		1.569
+PC 30:1	704.6	184	Positive	PC	PC	PC 30:1		1.569
+PC 30:0	706.6	184	Positive	PC	PC	PC 30:0		1.57
+PC O-32:2	716.6	184	Positive	PC	PC	PC O-32:2		1.601
+PC O-32:1	718.6	184	Positive	PC	PC	PC O-32:1		1.601
+PC 32:2	730.6	184	Positive	PC	PC	PC 32:2		1.605
+PC 32:1	732.6	184	Positive	PC	PC	PC 32:1		1.605
+PC 32:0	734.6	184	Positive	PC	PC	PC 32:0		1.605
+PC O-34:2	744.6	184	Positive	PC	PC	PC O-34:2		1.638
+PC O-34:1	746.6	184	Positive	PC	PC	PC O-34:1		1.638
+PC 34:2	758.6	184	Positive	PC	PC	PC 34:2		1.641
+PC 34:1	760.6	184	Positive	PC	PC	PC 34:1		1.642
+PC 34:0	762.6	184	Positive	PC	PC	PC 34:0		1.642
+PC 36:2	786.6	184	Positive	PC	PC	PC 36:2		1.679
+PC 36:1	788.7	184	Positive	PC	PC	PC 36:1		1.679
+PC 36:0	790.6	184	Positive	PC	PC	PC 36:0		1.679
+___Processing Information								
+Units for Internal standard	ng							
+Units for Results								

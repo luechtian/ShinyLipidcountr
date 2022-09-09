@@ -32,12 +32,20 @@ mod_1_raw_ui <- function(id, tabName){
                               actionButton(ns("calc"),"Start Upload"),
 
                               actionButton(ns("rmv_is"), "Confirm Internal standards"),
-                              textOutput(ns("check_raw")),
+                              textOutput(ns("check_raw"))
                             ),
 
                             shinydashboard::box(
                               rhandsontable::rHandsontableOutput(ns("is_check"), width = 350, height = "195"),
                               width = 3
+                            ),
+                            shinydashboard::box(
+                              downloadButton(ns("lv_output"), label = "LipidView test files"),
+                              downloadButton(ns("lv_methods"),     label = "LipidView target lists"),
+                              downloadButton(ns("lx_output"), label = "LipidXplorer test files"),
+                              downloadButton(ns("lx_methods"),   label = "LipidXplorer MFQL files"),
+                              title = "Downloadable content", width = 3,
+                              collapsible = TRUE, collapsed = TRUE
                             )
                           ),
 
@@ -159,7 +167,8 @@ mod_1_raw_server <- function(id){
           dplyr::filter(stringr::str_detect(species, "IS")) %>%
           unique() %>%
           dplyr::mutate(include = TRUE)
-      )
+      ) %>%
+        rhandsontable::hot_cols(manualColumnResize = TRUE)
 
     })
 
@@ -183,6 +192,44 @@ mod_1_raw_server <- function(id){
     })
 
     output$calc_check <- DT::renderDataTable(raw1())
+
+    # DownloadHandlers for Downloadable content box ----
+    output$lv_output <- downloadHandler(
+      filename = function() {
+        paste("lv_out", "zip", sep = ".")
+      },
+      content = function(file2) {
+        file.copy("inst/dl/lv_out.zip", file2)
+      }
+    )
+
+    output$lv_methods <- downloadHandler(
+      filename = function() {
+        paste("lv_methods", "zip", sep = ".")
+      },
+      content = function(file2) {
+        file.copy("inst/dl/lv_methods.zip", file2)
+      }
+    )
+
+    output$lx_output <- downloadHandler(
+      filename = function() {
+        paste("lx_out", "zip", sep = ".")
+      },
+      content = function(file2) {
+        file.copy("inst/dl/lx_out.zip", file2)
+      }
+    )
+
+    output$lx_methods <- downloadHandler(
+      filename = function() {
+        paste("lx_methods", "zip", sep = ".")
+      },
+      content = function(file2) {
+        file.copy("inst/dl/lx_methods.zip", file2)
+      }
+    )
+
 
     # Make IS filtered & processed File input available outside the module ----
     #

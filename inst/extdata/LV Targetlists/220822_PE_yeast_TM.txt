@@ -1,0 +1,26 @@
+___Reference Peak Information								
+IS PE 28:2	632.5	141	Positive	PE	PE	PE 28:2		1.483
+IS PE 40:2	800.7	141	Positive	PE	PE	PE 40:2		1.698
+IS PE 44:2	856.7	141	Positive	PE	PE	PE 44:2		1.776
+___Internal Standard Information								
+Use reference peaks for all tests:	0							
+___Target Lipid Information								
+PE 26:1	606.4	141	Positive	PE	PE	PE 26:1		1.45
+PE 26:0	608.4	141	Positive	PE	PE	PE 26:0		1.451
+PE 28:1	634.4	141	Positive	PE	PE	PE 28:1		1.483
+PE 28:0	636.5	141	Positive	PE	PE	PE 28:0		1.4837
+PE 30:2	660.5	141	Positive	PE	PE	PE 30:2		1.517
+PE 30:1	662.5	141	Positive	PE	PE	PE 30:1		1.517
+PE O-32:2	674.5	141	Positive	PE	PE	PE O-32:2		1.548
+PE O-32:1	676.5	141	Positive	PE	PE	PE O-32:1		1.5483
+PE 32:2	688.5	141	Positive	PE	PE	PE 32:2		1.551
+PE 32:1	690.6	141	Positive	PE	PE	PE 32:1		1.552
+PE O-34:2	702.5	141	Positive	PE	PE	PE O-34:2		1.5832
+PE O-34:1	704.5	141	Positive	PE	PE	PE O-34:1		1.5836
+PE 34:2	716.5	141	Positive	PE	PE	PE 34:2		1.587
+PE 34:1	718.6	141	Positive	PE	PE	PE 34:1		1.587
+PE 36:2	744.6	141	Positive	PE	PE	PE 36:2		1.623
+PE 36:1	746.6	141	Positive	PE	PE	PE 36:1		1.623
+___Processing Information								
+Units for Internal standard	ng							
+Units for Results								

@@ -8,7 +8,40 @@ app_ui <- function(request) {
 
   shinydashboard::dashboardPage(
 
-    shinydashboard::dashboardHeader(title = "ShinyLipidcountr"),
+    shinydashboard::dashboardHeader(
+      title = "ShinyLipidcountr",
+      shinydashboard::dropdownMenu(
+        type       = "notification",
+        badgeStatus = NULL,
+        icon       = icon("question-circle"),
+        headerText = "Need Help?",
+        # shinydashboard::notificationItem(text   = "Documentation",
+        #                                  href   = "christian.luechtenborg@bzh.uni-heidelberg.de",
+        #                                  icon   = icon("book"),
+        #                                  status = "success"),
+        # shinydashboard::notificationItem(text   = "Report bug",
+        #                                  href   = "https://github.com/luechtian/ShinyLipidcountr/issues/new",
+        #                                  status = "success",
+        #                                  icon   = icon("bug")),
+        tags$li(a(onclick = "onclick =window.open('https://github.com/luechtian/ShinyLipidcountr')",
+                  p(icon("github"), " GitHub repo"),
+                  href = NULL,
+                  title = "GitHub",
+                  style = "cursor: pointer;"),
+                class = "dropdown"),
+        tags$li(a(onclick = "onclick =window.open('https://github.com/luechtian/ShinyLipidcountr/issues/new')",
+                  p(icon("bug"), " Report bug"),
+                  href = NULL,
+                  title = "GitHub issues",
+                  style = "cursor: pointer;"),
+                class = "dropdown"),
+        tags$li(a(#onclick = "onclick =window.open('mailto:christian.luechtenborg@bzh.uni-heidelberg.de')",
+                  p(icon("envelope"), "Email"),
+                  href = "mailto:christian.luechtenborg@bzh.uni-heidelberg.de?subject=Need help with ShinyLipidcountr!",
+                  title = "Send me a message",
+                  style = "cursor: pointer;"),
+                class = "dropdown")
+    )),
 
     shinydashboard::dashboardSidebar(
       shinydashboard::sidebarMenu(

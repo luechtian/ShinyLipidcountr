@@ -1,0 +1,26 @@
+___Reference Peak Information								
+IS PA 37:4	728.5225	115	Positive	PA	PA	PA 37:4+NH4		1.598
+___Internal Standard Information								
+Use reference peaks for all tests:	0							
+___Target Lipid Information								
+PA 32:2	662.4	115	Positive	PA	PA	PA 32:2+NH4		1.511
+PA 32:1	664.5	115	Positive	PA	PA	PA 32:1+NH4		1.511
+PA 32:0	666.5	115	Positive	PA	PA	PA 32:0+NH4		1.512
+PA O-34:2	676.5	115	Positive	PA	PA	PA O-34:2+NH4		1.542
+PA O-34:1	678.5	115	Positive	PA	PA	PA O-34:1+NH4		1.542
+PA 34:3	688.5	115	Positive	PA	PA	PA 34:3+NH4		1.545
+PA 34:2	690.5	115	Positive	PA	PA	PA 34:2+NH4		1.546
+PA 34:1	692.5	115	Positive	PA	PA	PA 34:1+NH4		1.546
+PA O-36:2	704.6	115	Positive	PA	PA	PA O-36:2+NH4		1.577
+PA O-36:1	706.6	115	Positive	PA	PA	PA O-36:1+NH4		1.578
+PA 36:4	714.5	115	Positive	PA	PA	PA 36:4+NH4		1.5866
+PA 36:3	716.5	115	Positive	PA	PA	PA 36:3+NH4		1.5869
+PA 36:2	718.6	115	Positive	PA	PA	PA 36:2+NH4		1.581
+PA 36:1	720.6	115	Positive	PA	PA	PA 36:1+NH4		1.581
+PA 38:6	738.5	115	Positive	PA	PA	PA 38:6+NH4		1.615
+PA 38:5	740.6	115	Positive	PA	PA	PA 38:5+NH4		1.616
+PA 38:4	742.6	115	Positive	PA	PA	PA 38:4+NH4		1.616
+PA 38:3	744.6	115	Positive	PA	PA	PA 38:3+NH4		1.616
+___Processing Information								
+Units for Internal standard	ng							
+Units for Results								

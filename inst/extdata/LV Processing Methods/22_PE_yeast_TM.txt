@@ -1,0 +1,76 @@
+Analysis Type	3
+Name of these Preferences	22_PE_yeast_TM
+Description of these Preferences	
+Process QTRAP and TQ data	1
+Process EMS, ER	0
+Process PS, NL	1
+Extract MRM data	0
+Process ER	0
+Process Q1, Q3	0
+Process MS/MS	0
+Minimum Peak % Intensity (EMS, etc.)	0
+Minimum Peak S/N (EMS, etc.)	0
+Tolerance  UI	0.4
+Minimum Quad Scan Peak % Intensity	0.00
+Minimum Quad Scan Peak S/N	0.0
+Quad Scan Mass Tolerance	0.3
+Smooth Trap Scan Spectra	1
+Smooth Quad Scan Spectra	1
+Minimum MRM Peak S/N	3.0
+Minimum MRM Peak % Intensity	0.00
+Segment Mass Range	0
+Dedicated MS/MS	0
+Extract MS/MS Fragments	1
+IDA File	C:\Program Files\AB SCIEX\LipidView Software\LV Program Files\
+Limited mass range	0
+Deisotope	1
+Store Unidentified Peaks	0
+From Mass	0
+To Mass	0
+Identify Species	1
+Direct Infusion?	1
+Liquid Chromatography?	0
+DMS Method?	0
+Subtract background?	0
+From Time	5
+To Time	35
+Top % TIC	50
+Target Lipid List	C:\LipidView Data\LV Targetlists\220822_PE_yeast_TM.txt
+___Reference Peak Information								
+IS PE 28:2	632.5	141	Positive	PE	PE	PE 28:2		1.483
+IS PE 40:2	800.7	141	Positive	PE	PE	PE 40:2		1.698
+IS PE 44:2	856.7	141	Positive	PE	PE	PE 44:2		1.776
+___Internal Standard Information								
+Use reference peaks for all tests:	0							
+___Target Lipid Information								
+PE 26:1	606.4	141	Positive	PE	PE	PE 26:1		1.45
+PE 26:0	608.4	141	Positive	PE	PE	PE 26:0		1.451
+PE 28:1	634.4	141	Positive	PE	PE	PE 28:1		1.483
+PE 28:0	636.5	141	Positive	PE	PE	PE 28:0		1.4837
+PE 30:2	660.5	141	Positive	PE	PE	PE 30:2		1.517
+PE 30:1	662.5	141	Positive	PE	PE	PE 30:1		1.517
+PE O-32:2	674.5	141	Positive	PE	PE	PE O-32:2		1.548
+PE O-32:1	676.5	141	Positive	PE	PE	PE O-32:1		1.5483
+PE 32:2	688.5	141	Positive	PE	PE	PE 32:2		1.551
+PE 32:1	690.6	141	Positive	PE	PE	PE 32:1		1.552
+PE O-34:2	702.5	141	Positive	PE	PE	PE O-34:2		1.5832
+PE O-34:1	704.5	141	Positive	PE	PE	PE O-34:1		1.5836
+PE 34:2	716.5	141	Positive	PE	PE	PE 34:2		1.587
+PE 34:1	718.6	141	Positive	PE	PE	PE 34:1		1.587
+PE 36:2	744.6	141	Positive	PE	PE	PE 36:2		1.623
+PE 36:1	746.6	141	Positive	PE	PE	PE 36:1		1.623
+___Processing Information								
+Units for Internal standard	ng							
+Units for Results								
+End Of Target Lipid List
+Lipid Types	0
+Combine Periods	0
+Process Just Selected Periods	0
+Index of Selected Periods	
+Positive Polarity	1
+Internal Standards Unit	uM
+Spectral Peaks Fragment File	C:\Program Files (x86)\AB SCIEX\LipidView Software\LV Program Files\Fragments_pos.txt
+Fragment Mass Tolerance	0.3
+Spectral Peaks Smooth	0
+Spectral Peaks Times Noise	0
+Spectral Peaks Avg Replicate Data	0

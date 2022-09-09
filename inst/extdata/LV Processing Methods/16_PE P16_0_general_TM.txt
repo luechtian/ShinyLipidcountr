@@ -1,0 +1,76 @@
+Analysis Type	3
+Name of these Preferences	16_PE P16_0_general_TM
+Description of these Preferences	
+Process QTRAP and TQ data	1
+Process EMS, ER	0
+Process PS, NL	1
+Extract MRM data	0
+Process ER	0
+Process Q1, Q3	0
+Process MS/MS	0
+Minimum Peak % Intensity (EMS, etc.)	0
+Minimum Peak S/N (EMS, etc.)	0
+Tolerance  UI	0.4
+Minimum Quad Scan Peak % Intensity	0.00
+Minimum Quad Scan Peak S/N	0.0
+Quad Scan Mass Tolerance	0.3
+Smooth Trap Scan Spectra	1
+Smooth Quad Scan Spectra	1
+Minimum MRM Peak S/N	3.0
+Minimum MRM Peak % Intensity	0.00
+Segment Mass Range	0
+Dedicated MS/MS	0
+Extract MS/MS Fragments	1
+IDA File	C:\Program Files\AB SCIEX\LipidView Software\LV Program Files\
+Limited mass range	0
+Deisotope	1
+Store Unidentified Peaks	0
+From Mass	650
+To Mass	850
+Identify Species	1
+Direct Infusion?	1
+Liquid Chromatography?	0
+DMS Method?	0
+Subtract background?	0
+From Time	5
+To Time	35
+Top % TIC	50
+Target Lipid List	C:\LipidView Data\LV Targetlists\220822_PE P-16_0_general_TM.txt
+___Reference Peak Information								
+IS PE P-16:0/D3-15:0	665.53	364.2	Positive	PE P-16:0	PE P-16:0	PE P-(d3)31:1		1.531
+IS PE P-16:0/19:0	718.6	364.2	Positive	PE P-16:0	PE P-16:0	PE P-35:1		1.5871
+___Internal Standard Information								
+Use reference peaks for all tests:	0							
+___Target Lipid Information								
+PE P-16:0/16:1	674.6	364.2	Positive	PE P-16:0	PE P-16:0	PE P-32:2		1.548
+PE P-16:0/18:2	700.5	364.2	Positive	PE P-16:0	PE P-16:0	PE P-34:3		1.5829
+PE P-16:0/18:1	702.5	364.2	Positive	PE P-16:0	PE P-16:0	PE P-34:2		1.5832
+PE P-16:0/20:5	722.6	364.2	Positive	PE P-16:0	PE P-16:0	PE P-36:6		1.618
+PE P-16:0/20:4	724.6	364.2	Positive	PE P-16:0	PE P-16:0	PE P-36:5		1.6183
+PE P-16:0/20:3	726.6	364.2	Positive	PE P-16:0	PE P-16:0	PE P-36:4		1.6187
+PE P-16:0/20:2	728.6	364.2	Positive	PE P-16:0	PE P-16:0	PE P-36:3		1.619
+PE P-16:0/20:1	730.6	364.2	Positive	PE P-16:0	PE P-16:0	PE P-36:2		1.6193
+PE P-16:0/22:6	748.5	364.2	Positive	PE P-16:0	PE P-16:0	PE P-38:7		1.6545
+PE P-16:0/22:5	750.6	364.2	Positive	PE P-16:0	PE P-16:0	PE P-38:6		1.6549
+PE P-16:0/22:4	752.6	364.2	Positive	PE P-16:0	PE P-16:0	PE P-38:5		1.6552
+PE P-16:0/22:3	754.6	364.2	Positive	PE P-16:0	PE P-16:0	PE P-38:4		1.6555
+PE P-16:0/22:2	756.6	364.2	Positive	PE P-16:0	PE P-16:0	PE P-38:3		1.6558
+PE P-16:0/22:1	758.6	364.2	Positive	PE P-16:0	PE P-16:0	PE P-38:2		1.6562
+PE P-16:0/24:6	776.6	364.2	Positive	PE P-16:0	PE P-16:0	PE P-40:7		1.6922
+PE P-16:0/24:5	778.6	364.2	Positive	PE P-16:0	PE P-16:0	PE P-40:6		1.6925
+PE P-16:0/24:4	780.6	364.2	Positive	PE P-16:0	PE P-16:0	PE P-40:5		1.6929
+___Processing Information								
+Units for Internal standard	ng							
+Units for Results								
+End Of Target Lipid List
+Lipid Types	0123
+Combine Periods	0
+Process Just Selected Periods	0
+Index of Selected Periods	
+Positive Polarity	1
+Internal Standards Unit	uM
+Spectral Peaks Fragment File	C:\Program Files (x86)\AB SCIEX\LipidView Software\LV Program Files\Fragments_pos.txt
+Fragment Mass Tolerance	0.3
+Spectral Peaks Smooth	0
+Spectral Peaks Times Noise	0
+Spectral Peaks Avg Replicate Data	0

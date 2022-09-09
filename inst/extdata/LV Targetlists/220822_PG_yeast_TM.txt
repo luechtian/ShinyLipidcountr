@@ -1,0 +1,28 @@
+___Reference Peak Information								
+IS PG 28:2	680.4	189	Positive	PG	PG	PG 28:2+NH4		1.5014
+IS PG 40:2	848.6	189	Positive	PG	PG	PG 40:2+NH4		1.7186
+IS PG 44:2	904.7	189	Positive	PG	PG	PG 44:2+NH4		1.798
+___Internal Standard Information								
+Use reference peaks for all tests:	0							
+___Target Lipid Information								
+PG 28:0	684.4	189	Positive	PG	PG	PG 28:0+NH4		1.502
+PG 30:1	710.4972	189	Positive	PG	PG	PG 30:1+NH4		1.5359
+PG 30:0	712.5129	189	Positive	PG	PG	PG 30:0+NH4		1.5425
+PG O-32:1	724.7	189	Positive	PG	PG	PG O-32:1+NH4		1.5738
+PG O-32:0	726.7	189	Positive	PG	PG	PG O-32:1+NH4		1.5742
+PG 32:2	736.6	189	Positive	PG	PG	PG 32:2+NH4		1.571
+PG 32:1	738.6	189	Positive	PG	PG	PG 32:1+NH4		1.571
+PG 32:0	740.6	189	Positive	PG	PG	PG 32:0+NH4		1.571
+PG O-34:2	750.6	189	Positive	PG	PG	PG O-34:2+NH4		1.6094
+PG O-34:1	752.6	189	Positive	PG	PG	PG O-34:1+NH4		1.6097
+PG O-34:0	754.5	189	Positive	PG	PG	PG O-34:0+NH4		1.61
+PG 34:2	764.6	189	Positive	PG	PG	PG 34:2+NH4		1.6063
+PG 34:1	766.6	189	Positive	PG	PG	PG 34:1+NH4		1.607
+PG 34:0	768.6	189	Positive	PG	PG	PG 34:0+NH4		1.6135
+PG 36:3	790.6	189	Positive	PG	PG	PG 36:3+NH4		1.6425
+PG 36:2	792.6	189	Positive	PG	PG	PG 36:2+NH4		1.6429
+PG 36:1	794.6	189	Positive	PG	PG	PG 36:1+NH4		1.6432
+PG 36:0	796.6	189	Positive	PG	PG	PG 36:0+NH4		1.6435
+___Processing Information								
+Units for Internal standard								
+Units for Results								

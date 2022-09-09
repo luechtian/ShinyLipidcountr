@@ -1,0 +1,29 @@
+___Reference Peak Information								
+IS CE 9:0	544.6	369	Positive	CE	CE	544.5_369.00_Positive		1.593
+IS CE 19:0	684.8	369	Positive	CE	CE	CE 19:0+NH4		1.685
+IS CE 24:1	752.9	369	Positive	CE	CE	CE 24:1+NH4		1.782
+___Internal Standard Information								
+Use reference peaks for all tests:	0							
+___Target Lipid Information								
+CE 14:1	612.7	369	Positive	CE	CE	CE 14:1+NH4		1.599
+CE 14:0	614.7	369	Positive	CE	CE	CE 14:0+NH4		1.593
+CE 15:0	628.7	369	Positive	CE	CE	CE 15:0+NH4		1.618
+CE 16:2	638.7	369	Positive	CE	CE	CE 16:2+NH4		1.629
+CE 16:1	640.7	369	Positive	CE	CE	CE 16:1+NH4		1.635
+CE 16:0	642.7	369	Positive	CE	CE	CE 16:0+NH4		1.629
+CE 17:1	654.7	369	Positive	CE	CE	CE 17:1+NH4		1.647
+CE 17:0	656.7	369	Positive	CE	CE	CE 17:0+NH4		1.654
+CE 18:3	664.7	369	Positive	CE	CE	CE 18:3+NH4		1.672
+CE 18:2	666.7	369	Positive	CE	CE	CE 18:2+NH4		1.666
+CE 18:1	668.7	369	Positive	CE	CE	CE 18:1+NH4		1.666
+CE 18:0	670.7	369	Positive	CE	CE	CE 18:0+NH4		1.666
+CE 19:1	682.7	369	Positive	CE	CE	CE 19:1+NH4		1.692
+CE 20:4	690.7	369	Positive	CE	CE	CE 20:4+NH4		1.7098
+CE 20:3	692.7	369	Positive	CE	CE	CE 20:3+NH4		1.7101
+CE 20:2	694.8	369	Positive	CE	CE	CE 20:2+NH4		1.71
+CE 20:1	696.8	369	Positive	CE	CE	CE 20:1+NH4		1.711
+CE 22:6	714.7	369	Positive	CE	CE	CE 22:6+NH4		1.748
+CE 22:5	716.7	369	Positive	CE	CE	CE 22:5+NH4		1.7483
+___Processing Information								
+Units for Internal standard	ng							
+Units for Results								

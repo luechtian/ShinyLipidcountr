@@ -1,0 +1,69 @@
+Analysis Type	3
+Name of these Preferences	27_Cer_yeast_TM
+Description of these Preferences	
+Process QTRAP and TQ data	1
+Process EMS, ER	0
+Process PS, NL	1
+Extract MRM data	0
+Process ER	0
+Process Q1, Q3	0
+Process MS/MS	0
+Minimum Peak % Intensity (EMS, etc.)	0
+Minimum Peak S/N (EMS, etc.)	0
+Tolerance  UI	0.4
+Minimum Quad Scan Peak % Intensity	0.00
+Minimum Quad Scan Peak S/N	0.0
+Quad Scan Mass Tolerance	0.3
+Smooth Trap Scan Spectra	1
+Smooth Quad Scan Spectra	1
+Minimum MRM Peak S/N	3.0
+Minimum MRM Peak % Intensity	0.00
+Segment Mass Range	0
+Dedicated MS/MS	0
+Extract MS/MS Fragments	1
+IDA File	C:\Program Files\AB SCIEX\LipidView Software\LV Program Files\
+Limited mass range	0
+Deisotope	1
+Store Unidentified Peaks	0
+From Mass	0
+To Mass	0
+Identify Species	1
+Direct Infusion?	1
+Liquid Chromatography?	0
+DMS Method?	0
+Subtract background?	0
+From Time	5
+To Time	35
+Top % TIC	50
+Target Lipid List	C:\LipidView Data\LV Targetlists\220822_Cer_yeast_TM.txt
+___Reference Peak Information								
+IS Cer 36:0;3	584.6	282	Positive	Cer	Cer	Cer 36:0;3		1.5201
+___Internal Standard Information								
+Use reference peaks for all tests:	0							
+___Target Lipid Information								
+Cer 34:0;3	556.5	282	Positive	Cer	Cer	Cer 34:0;3		1.4863
+Cer 38:0;4	628.6	282	Positive	Cer	Cer	Cer 38:0;4		1.5585
+Cer 40:0;3	640.6	282	Positive	Cer	Cer	Cer 40:0;3		1.5902
+Cer 40:0;4	656.6	282	Positive	Cer	Cer	Cer 40:0;4		1.594
+Cer 42:0;3	668.7	282	Positive	Cer	Cer	Cer 42:0;3		1.6264
+Cer 40:0;5	672.6	282	Positive	Cer	Cer	Cer 40:0;5		1.5978
+Cer 44:0;3	696.7	282	Positive	Cer	Cer	Cer 44:0;3		1.6634
+Cer 42:0;5	700.6	282	Positive	Cer	Cer	Cer 42:0;5		1.6342
+Cer 44:0;4	712.7	282	Positive	Cer	Cer	Cer 44:0;4		1.6674
+Cer 44:0;5	728.7	282	Positive	Cer	Cer	Cer 44:0;5		1.6714
+Cer 46:0;4	740.7	282	Positive	Cer	Cer	Cer 46:0;4		1.7054
+___Processing Information								
+Units for Internal standard	ng							
+Units for Results								
+End Of Target Lipid List
+Lipid Types	0123
+Combine Periods	0
+Process Just Selected Periods	0
+Index of Selected Periods	
+Positive Polarity	1
+Internal Standards Unit	uM
+Spectral Peaks Fragment File	C:\Program Files (x86)\AB SCIEX\LipidView Software\LV Program Files\Fragments_pos.txt
+Fragment Mass Tolerance	0.3
+Spectral Peaks Smooth	0
+Spectral Peaks Times Noise	0
+Spectral Peaks Avg Replicate Data	0

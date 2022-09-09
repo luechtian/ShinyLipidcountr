@@ -1,0 +1,76 @@
+Analysis Type	3
+Name of these Preferences	07_PA_general_TM
+Description of these Preferences	
+Process QTRAP and TQ data	1
+Process EMS, ER	0
+Process PS, NL	1
+Extract MRM data	0
+Process ER	0
+Process Q1, Q3	0
+Process MS/MS	0
+Minimum Peak % Intensity (EMS, etc.)	0
+Minimum Peak S/N (EMS, etc.)	0
+Tolerance  UI	0.4
+Minimum Quad Scan Peak % Intensity	0.00
+Minimum Quad Scan Peak S/N	0.0
+Quad Scan Mass Tolerance	0.3
+Smooth Trap Scan Spectra	1
+Smooth Quad Scan Spectra	1
+Minimum MRM Peak S/N	3.0
+Minimum MRM Peak % Intensity	0.00
+Segment Mass Range	0
+Dedicated MS/MS	0
+Extract MS/MS Fragments	1
+IDA File	C:\Program Files\AB SCIEX\LipidView Software\LV Program Files\
+Limited mass range	0
+Deisotope	1
+Store Unidentified Peaks	0
+From Mass	0
+To Mass	0
+Identify Species	1
+Direct Infusion?	1
+Liquid Chromatography?	0
+DMS Method?	0
+Subtract background?	0
+From Time	5
+To Time	35
+Top % TIC	50
+Target Lipid List	C:\LipidView Data\LV Targetlists\220822_PA_general_TM.txt
+___Reference Peak Information								
+IS PA 37:4	728.5225	115	Positive	PA	PA	PA 37:4+NH4		1.598
+___Internal Standard Information								
+Use reference peaks for all tests:	0							
+___Target Lipid Information								
+PA 32:2	662.4	115	Positive	PA	PA	PA 32:2+NH4		1.511
+PA 32:1	664.5	115	Positive	PA	PA	PA 32:1+NH4		1.511
+PA 32:0	666.5	115	Positive	PA	PA	PA 32:0+NH4		1.512
+PA O-34:2	676.5	115	Positive	PA	PA	PA O-34:2+NH4		1.542
+PA O-34:1	678.5	115	Positive	PA	PA	PA O-34:1+NH4		1.542
+PA 34:3	688.5	115	Positive	PA	PA	PA 34:3+NH4		1.545
+PA 34:2	690.5	115	Positive	PA	PA	PA 34:2+NH4		1.546
+PA 34:1	692.5	115	Positive	PA	PA	PA 34:1+NH4		1.546
+PA O-36:2	704.6	115	Positive	PA	PA	PA O-36:2+NH4		1.577
+PA O-36:1	706.6	115	Positive	PA	PA	PA O-36:1+NH4		1.578
+PA 36:4	714.5	115	Positive	PA	PA	PA 36:4+NH4		1.5866
+PA 36:3	716.5	115	Positive	PA	PA	PA 36:3+NH4		1.5869
+PA 36:2	718.6	115	Positive	PA	PA	PA 36:2+NH4		1.581
+PA 36:1	720.6	115	Positive	PA	PA	PA 36:1+NH4		1.581
+PA 38:6	738.5	115	Positive	PA	PA	PA 38:6+NH4		1.615
+PA 38:5	740.6	115	Positive	PA	PA	PA 38:5+NH4		1.616
+PA 38:4	742.6	115	Positive	PA	PA	PA 38:4+NH4		1.616
+PA 38:3	744.6	115	Positive	PA	PA	PA 38:3+NH4		1.616
+___Processing Information								
+Units for Internal standard	ng							
+Units for Results								
+End Of Target Lipid List
+Lipid Types	0123
+Combine Periods	0
+Process Just Selected Periods	0
+Index of Selected Periods	
+Positive Polarity	1
+Internal Standards Unit	uM
+Spectral Peaks Fragment File	C:\Program Files (x86)\AB SCIEX\LipidView Software\LV Program Files\Fragments_pos.txt
+Fragment Mass Tolerance	0.3
+Spectral Peaks Smooth	0
+Spectral Peaks Times Noise	0
+Spectral Peaks Avg Replicate Data	0

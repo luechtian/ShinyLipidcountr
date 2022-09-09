@@ -1,0 +1,9 @@
+___Reference Peak Information								
+IS D6-Chol	452.44	77.00	Positive	Chol	Chol	452.4_77.00_Positive		1.395
+___Internal Standard Information								
+Use reference peaks for all tests:	0							
+___Target Lipid Information								
+Chol	446.4000	77.00	Positive	Chol	Chol	446.4_77.00_Positive		1.391
+___Processing Information								
+Units for Internal standard	ng							
+Units for Results								

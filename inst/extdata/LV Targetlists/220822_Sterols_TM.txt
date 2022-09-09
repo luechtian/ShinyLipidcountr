@@ -1,0 +1,15 @@
+___Reference Peak Information								
+IS D7-Chol	453.4	77	Positive	Sterols	Sterols	453.4_77.00_Positive		1
+IS D5-Stig	477.4	77	Positive	Sterols	Sterols	477.4_77.00_Positive		1
+___Internal Standard Information								
+Use reference peaks for all tests:	0							
+___Target Lipid Information								
+Zymosterol	444.4	77	Positive	Sterols	Sterols	444.4_77.00_Positive		1
+Cholesterol	446.4	77	Positive	Sterols	Sterols	446.4_77.00_Positive		1
+Ergosterol	456.4	77	Positive	Sterols	Sterols	456.4_77.00_Positive		1
+Brassicasterol	458.4	77	Positive	Sterols	Sterols	458.4_77.00_Positive		1
+Stigmasterol	472.4	77	Positive	Sterols	Sterols	472.4_77.00_Positive		1
+Sitosterol	474.4	77	Positive	Sterols	Sterols	474.4_77.00_Positive		1
+___Processing Information								
+Units for Internal standard	ng							
+Units for Results								

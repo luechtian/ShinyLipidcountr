@@ -17,3 +17,4 @@ metadata_template <- function(data){
   empty_metadata %>%
     dplyr::mutate(dplyr::across(tidyselect::everything(), as.character))
 }
+

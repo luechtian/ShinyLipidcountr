@@ -1,15 +1,17 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# ShinyLipidcountr
+# ShinyLipidcountr <img src='man/figures/logo.ico' align="right" height="109" /></a>
 
 <!-- badges: start -->
 
-[![Codecov test
-coverage](https://codecov.io/gh/luechtian/ShinyLipidcountr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/luechtian/ShinyLipidcountr?branch=main)
+[![codecov](https://codecov.io/gh/luechtian/ShinyLipidcountr/branch/main/graph/badge.svg?token=4VrPT1kWrI)](https://codecov.io/gh/luechtian/ShinyLipidcountr)
 <!-- badges: end -->
 
-The goal of ShinyLipidcountr is to …
+The goal of ShinyLipidcountr is to build an excel workbook that contains
+quantified lipidomics data and graphs. The shiny app is able to read
+LipidView and LipidXplorer report files to calculate concentrations of
+various lipid species.
 
 ## Installation
 
@@ -21,34 +23,19 @@ You can install the development version of ShinyLipidcountr from
 devtools::install_github("luechtian/ShinyLipidcountr")
 ```
 
-## Example
+## Getting started
 
-This is a basic example which shows you how to solve a common problem:
+You need LipidView or LipidXplorer for peak processing and annotation of
+your mass spectrometric data. This app accepts text-files and csv-files
+with a specific format.
 
-``` r
-#library(ShinyLipidcountr)
-## basic example code
-```
+For LipidView-output, use target lists and only the “MarkerView” export
+option in LipidView <img src='man/figures/lv_export.png' /></a>
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+## 
 
-``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
-```
-
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this. You could also
-use GitHub Actions to re-render `README.Rmd` every time you push. An
-example workflow can be found here:
-<https://github.com/r-lib/actions/tree/v1/examples>.
+A LipidView-textfile in a spreadsheet looks like this:
+<img src='man/figures/lv_table.png' /></a>
 
 You can also embed plots, for example:
 

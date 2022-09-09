@@ -1,0 +1,78 @@
+Analysis Type	3
+Name of these Preferences	24_PI_yeast_TM
+Description of these Preferences	
+Process QTRAP and TQ data	1
+Process EMS, ER	0
+Process PS, NL	1
+Extract MRM data	0
+Process ER	0
+Process Q1, Q3	0
+Process MS/MS	0
+Minimum Peak % Intensity (EMS, etc.)	0
+Minimum Peak S/N (EMS, etc.)	0
+Tolerance  UI	0.4
+Minimum Quad Scan Peak % Intensity	0.00
+Minimum Quad Scan Peak S/N	0.0
+Quad Scan Mass Tolerance	0.3
+Smooth Trap Scan Spectra	1
+Smooth Quad Scan Spectra	1
+Minimum MRM Peak S/N	3.0
+Minimum MRM Peak % Intensity	0.00
+Segment Mass Range	0
+Dedicated MS/MS	0
+Extract MS/MS Fragments	1
+IDA File	C:\Program Files\AB SCIEX\LipidView Software\LV Program Files\
+Limited mass range	0
+Deisotope	1
+Store Unidentified Peaks	0
+From Mass	0
+To Mass	0
+Identify Species	1
+Direct Infusion?	1
+Liquid Chromatography?	0
+DMS Method?	0
+Subtract background?	0
+From Time	5
+To Time	35
+Top % TIC	50
+Target Lipid List	C:\LipidView Data\LV Targetlists\220822_PI_yeast_TM.txt
+___Reference Peak Information								
+IS PI 37:4	890.6	277	Positive	PI	PI	PI 37:4+NH4		1.73
+___Internal Standard Information								
+Use reference peaks for all tests:	0							
+___Target Lipid Information								
+PI 24:0	716.4	277	Positive	PI	PI	PI 24:0+NH4		1.496
+PI 26:1	742.5	277	Positive	PI	PI	PI 26:1+NH4		1.53
+PI 26:0	744.5	277	Positive	PI	PI	PI 26:0+NH4		1.53
+PI 28:1	770.5	277	Positive	PI	PI	PI 28:1+NH4		1.564
+PI 28:0	772.5	277	Positive	PI	PI	PI 28:0+NH4		1.565
+PI 30:2	796.5	277	Positive	PI	PI	PI 30:2+NH4		1.6
+PI 30:1	798.5	277	Positive	PI	PI	PI 30:1+NH4		1.6
+PI 30:0	800.5	277	Positive	PI	PI	PI 30:0+NH4		1.6
+PI O-32:2	810.5	277	Positive	PI	PI	PI O-32:2+NH4		1.6323
+PI O-32:1	812.5	277	Positive	PI	PI	PI O-32:1+NH4		1.6326
+PI 32:2	824.5	277	Positive	PI	PI	PI 32:2+NH4		1.636
+PI 32:1	826.5	277	Positive	PI	PI	PI 32:1+NH4		1.636
+PI O-34:2	838.5	277	Positive	PI	PI	PI O-34:2+NH4		1.6694
+PI O-34:1	840.5	277	Positive	PI	PI	PI O-34:1+NH4		1.6698
+PI 34:2	852.6	277	Positive	PI	PI	PI 34:2+NH4		1.673
+PI 34:1	854.6	277	Positive	PI	PI	PI 34:1+NH4		1.674
+PI O-36:2	866.5	277	Positive	PI	PI	PI O-36:2+NH4		1.7076
+PI O-36:1	868.5	277	Positive	PI	PI	PI O-36:1+NH4		1.7079
+PI 36:2	880.6	277	Positive	PI	PI	PI 36:2+NH4		1.711
+PI 36:1	882.6	277	Positive	PI	PI	PI 36:1+NH4		1.712
+___Processing Information								
+Units for Internal standard	ng							
+Units for Results								
+End Of Target Lipid List
+Lipid Types	0
+Combine Periods	0
+Process Just Selected Periods	0
+Index of Selected Periods	
+Positive Polarity	1
+Internal Standards Unit	uM
+Spectral Peaks Fragment File	C:\Program Files (x86)\AB SCIEX\LipidView Software\LV Program Files\Fragments_pos.txt
+Fragment Mass Tolerance	0.3
+Spectral Peaks Smooth	0
+Spectral Peaks Times Noise	0
+Spectral Peaks Avg Replicate Data	0

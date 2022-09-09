@@ -1,0 +1,85 @@
+Analysis Type	3
+Name of these Preferences	06_PG_general_TM
+Description of these Preferences	
+Process QTRAP and TQ data	1
+Process EMS, ER	0
+Process PS, NL	1
+Extract MRM data	0
+Process ER	0
+Process Q1, Q3	0
+Process MS/MS	0
+Minimum Peak % Intensity (EMS, etc.)	0
+Minimum Peak S/N (EMS, etc.)	0
+Tolerance  UI	0.4
+Minimum Quad Scan Peak % Intensity	0.00
+Minimum Quad Scan Peak S/N	0.0
+Quad Scan Mass Tolerance	0.3
+Smooth Trap Scan Spectra	1
+Smooth Quad Scan Spectra	1
+Minimum MRM Peak S/N	3.0
+Minimum MRM Peak % Intensity	0.00
+Segment Mass Range	0
+Dedicated MS/MS	0
+Extract MS/MS Fragments	1
+IDA File	C:\Program Files\AB SCIEX\LipidView Software\LV Program Files\
+Limited mass range	0
+Deisotope	1
+Store Unidentified Peaks	0
+From Mass	0
+To Mass	0
+Identify Species	1
+Direct Infusion?	1
+Liquid Chromatography?	0
+DMS Method?	0
+Subtract background?	0
+From Time	5
+To Time	35
+Top % TIC	50
+Target Lipid List	C:\LipidView Data\LV Targetlists\220822_PG_general_TM.txt
+___Reference Peak Information								
+IS PG 28:2	680.4	189	Positive	PG	PG	PG 28:2+NH4		1.5014
+IS PG 40:2	848.6	189	Positive	PG	PG	PG 40:2+NH4		1.7186
+IS PG 44:2	904.7	189	Positive	PG	PG	PG 44:2+NH4		1.798
+___Internal Standard Information								
+Use reference peaks for all tests:	0							
+___Target Lipid Information								
+PG 30:1	710.5	189	Positive	PG	PG	PG 30:1+NH4		1.5422
+PG 30:0	712.6	189	Positive	PG	PG	PG 30:0+NH4		1.5425
+PG O-32:1	724.7	189	Positive	PG	PG	PG O-32:1+NH4		1.5738
+PG O-32:0	726.7	189	Positive	PG	PG	PG O-32:1+NH4		1.5742
+PG 32:2	736.5	189	Positive	PG	PG	PG 32:2+NH4		1.5705
+PG 32:1	738.5	189	Positive	PG	PG	PG 32:1+NH4		1.5708
+PG 32:0	740.6	189	Positive	PG	PG	PG 32:0+NH4		1.571
+PG O-34:2	750.6	189	Positive	PG	PG	PG O-34:2+NH4		1.6094
+PG O-34:1	752.6	189	Positive	PG	PG	PG O-34:1+NH4		1.6097
+PG O-34:0	754.5	189	Positive	PG	PG	PG O-34:0+NH4		1.61
+PG 34:3	762.5	189	Positive	PG	PG	PG 34:3+NH4		1.606
+PG 34:2	764.6	189	Positive	PG	PG	PG 34:2+NH4		1.606
+PG 34:1	766.6	189	Positive	PG	PG	PG 34:1+NH4		1.607
+PG 34:0	768.6	189	Positive	PG	PG	PG 34:0+NH4		1.6135
+PG O-36:2	778.7	189	Positive	PG	PG	PG O-36:2+NH4		1.646
+PG O-36:1	780.7	189	Positive	PG	PG	PG O-36:1+NH4		1.6463
+PG 36:4	788.6	189	Positive	PG	PG	PG 36:4+NH4		1.642
+PG 36:3	790.6	189	Positive	PG	PG	PG 36:3+NH4		1.6425
+PG 36:2	792.6	189	Positive	PG	PG	PG 36:2+NH4		1.643
+PG 36:1	794.6	189	Positive	PG	PG	PG 36:1+NH4		1.643
+PG 38:6	812.6	189	Positive	PG	PG	PG 38:6+NH4		1.679
+PG 38:5	814.6	189	Positive	PG	PG	PG 38:5+NH4		1.679
+PG 38:4	816.6	189	Positive	PG	PG	PG 38:4+NH4		1.68
+PG 38:3	818.6	189	Positive	PG	PG	PG 38:3+NH4		1.68
+PG 38:2	820.6	189	Positive	PG	PG	PG 38:2+NH4		1.68
+___Processing Information								
+Units for Internal standard	ng							
+Units for Results								
+End Of Target Lipid List
+Lipid Types	012
+Combine Periods	0
+Process Just Selected Periods	0
+Index of Selected Periods	
+Positive Polarity	1
+Internal Standards Unit	uM
+Spectral Peaks Fragment File	C:\Program Files (x86)\AB SCIEX\LipidView Software\LV Program Files\Fragments_pos.txt
+Fragment Mass Tolerance	0.3
+Spectral Peaks Smooth	0
+Spectral Peaks Times Noise	0
+Spectral Peaks Avg Replicate Data	0

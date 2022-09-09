@@ -1,0 +1,29 @@
+___Reference Peak Information								
+IS LPC 17:1	508.4	184	Positive	LPC	LPC	LPC 17:1		1.353
+___Internal Standard Information								
+Use reference peaks for all tests:	0							
+___Target Lipid Information								
+LPC 14:1	466.3	184	Positive	LPC	LPC	LPC 14:1		1.308
+LPC 14:0	468.4	184	Positive	LPC	LPC	LPC 14:0		1.308
+LPC 16:1	494.4	184	Positive	LPC	LPC	LPC 16:1		1.337
+LPC 16:0	496.4	184	Positive	LPC	LPC	LPC 16:0		1.338
+LPC 18:3	518.3	184	Positive	LPC	LPC	LPC 18:3		1.367
+LPC 18:2	520.4	184	Positive	LPC	LPC	LPC 18:2		1.368
+LPC 18:1	522.4	184	Positive	LPC	LPC	LPC 18:1		1.368
+LPC 18:0	524.4	184	Positive	LPC	LPC	LPC 18:0		1.368
+LPC 20:6	540.3	184	Positive	LPC	LPC	LPC 20:6		1.398
+LPC 20:5	542.4	184	Positive	LPC	LPC	LPC 20:5		1.398
+LPC 20:4	544.4	184	Positive	LPC	LPC	LPC 20:4		1.398
+LPC 20:3	546.4	184	Positive	LPC	LPC	LPC 20:3		1.399
+LPC 20:2	548.5	184	Positive	LPC	LPC	LPC 20:2		1.399
+LPC 20:1	550.4	184	Positive	LPC	LPC	LPC 20:1		1.399
+LPC 20:0	552.4	184	Positive	LPC	LPC	LPC 20:0		1.399
+LPC 22:6	568.3	184	Positive	LPC	LPC	LPC 22:6		1.43
+LPC 22:5	570.4	184	Positive	LPC	LPC	LPC 22:5		1.43
+LPC 22:4	572.4	184	Positive	LPC	LPC	LPC 22:4		1.43
+LPC 22:3	574.5	184	Positive	LPC	LPC	LPC 22:3		1.43
+LPC 22:2	576.4	184	Positive	LPC	LPC	LPC 22:2		1.431
+LPC 22:1	578.5	184	Positive	LPC	LPC	LPC 22:1		1.431
+___Processing Information								
+Units for Internal standard	ng							
+Units for Results								

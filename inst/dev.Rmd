@@ -812,3 +812,14 @@ false_pos <- DF[(myindex + 1),]
 data2 <- data %>% filter(!species %in% false_pos$chemical_species)
 ```
 
+```{r}
+
+                                    tags$li(a(id = "dl",
+                                              href = "inst/dl/wb.xlsx",
+                                              target = "",
+                                              download = "",
+                                              icon("filter"),
+                                              label = "Download"),
+                                            class = "dropdown")
+```
+

@@ -1,0 +1,16 @@
+___Reference Peak Information								
+IS D3-Cer 36:1;2	569.6	264.3	Positive	Cer	Cer	D3-Cer 36:1;2		1.516
+___Internal Standard Information								
+Use reference peaks for all tests:	0							
+___Target Lipid Information								
+Cer 34:1;2	538.6	264.3	Positive	Cer	Cer	Cer 34:1;2		1.482
+Cer 36:1;2	566.6	264.3	Positive	Cer	Cer	Cer 36:1;2		1.516
+Cer 38:1;2	594.7	264.3	Positive	Cer	Cer	Cer 38:1;2		1.551
+Cer 40:2;2	620.7	264.3	Positive	Cer	Cer	Cer 40:2;2		1.586
+Cer 40:1;2	622.7	264.3	Positive	Cer	Cer	Cer 40:1;2		1.586
+Cer 40:2;3	636.7	264.3	Positive	Cer	Cer	Cer 40:2;3		1.59
+Cer 42:2;2	648.7	264.3	Positive	Cer	Cer	Cer 42:2;2		1.622
+Cer 42:1;2	650.7	264.3	Positive	Cer	Cer	Cer 42:1;2		1.622
+___Processing Information								
+Units for Internal standard	ng							
+Units for Results

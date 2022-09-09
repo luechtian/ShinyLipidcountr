@@ -1,0 +1,26 @@
+___Reference Peak Information								
+IS SM 31:1;2	661.5	184	Positive	SM	SM	SM 31:1;2		1.5331
+IS SM 35:1;2	717.6	184	Positive	SM	SM	SM 35:1;2		1.604
+IS SM 43:1;2	829.7	184	Positive	SM	SM	SM 43:1;2		1.755
+___Internal Standard Information								
+Use reference peaks for all tests:	0							
+___Target Lipid Information								
+SM 34:2;2	701.6	184	Positive	SM	SM	SM 34:2;2		1.585
+SM 34:1;2	703.6	184	Positive	SM	SM	SM 34:1;2		1.586
+SM 34:0;2	705.6	184	Positive	SM	SM	SM 34:0;2		1.5861
+SM 36:2;2	729.6	184	Positive	SM	SM	SM 36:2;2		1.622
+SM 36:1;2	731.6	184	Positive	SM	SM	SM 36:1;2		1.622
+SM 36:0;2	733.6	184	Positive	SM	SM	SM 36:0;2		1.622
+SM 38:2;2	757.6	184	Positive	SM	SM	SM 38:2;2		1.659
+SM 38:1;2	759.6	184	Positive	SM	SM	SM 38:1;2		1.659
+SM 38:0;2	761.7	184	Positive	SM	SM	SM 38:0;2		1.659
+SM 40:2;2	785.7	184	Positive	SM	SM	SM 40:2;2		1.696
+SM 40:1;2	787.7	184	Positive	SM	SM	SM 40:1;2		1.697
+SM 40:0;2	789.7	184	Positive	SM	SM	SM 40:0;2		1.697
+SM 42:3;2	811.6	184	Positive	SM	SM	SM 42:3;2		1.735
+SM 42:2;2	813.6	184	Positive	SM	SM	SM 42:2;2		1.735
+SM 42:1;2	815.7	184	Positive	SM	SM	SM 42:1;2		1.735
+SM 42:0;2	817.7	184	Positive	SM	SM	SM 42:0;2		1.736
+___Processing Information								
+Units for Internal standard	ng							
+Units for Results								
