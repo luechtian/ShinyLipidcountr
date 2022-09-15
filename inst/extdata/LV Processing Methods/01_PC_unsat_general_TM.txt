@@ -1,0 +1,114 @@
+Analysis Type	3
+Name of these Preferences	01_PC_unsat_general_TM
+Description of these Preferences	
+Process QTRAP and TQ data	1
+Process EMS, ER	0
+Process PS, NL	1
+Extract MRM data	0
+Process ER	0
+Process Q1, Q3	0
+Process MS/MS	0
+Minimum Peak % Intensity (EMS, etc.)	0
+Minimum Peak S/N (EMS, etc.)	0
+Tolerance  UI	0.4
+Minimum Quad Scan Peak % Intensity	0.00
+Minimum Quad Scan Peak S/N	0.0
+Quad Scan Mass Tolerance	0.3
+Smooth Trap Scan Spectra	1
+Smooth Quad Scan Spectra	1
+Minimum MRM Peak S/N	3.0
+Minimum MRM Peak % Intensity	0.00
+Segment Mass Range	0
+Dedicated MS/MS	0
+Extract MS/MS Fragments	1
+IDA File	C:\Program Files\AB SCIEX\LipidView Software\LV Program Files\
+Limited mass range	0
+Deisotope	1
+Store Unidentified Peaks	0
+From Mass	0
+To Mass	0
+Identify Species	1
+Direct Infusion?	1
+Liquid Chromatography?	0
+DMS Method?	0
+Subtract background?	0
+From Time	5
+To Time	35
+Top % TIC	50
+Target Lipid List	C:\LipidView Data\LV Targetlists\220822_PC_unsat_general_TM.txt
+___Reference Peak Information								
+IS PC 28:2	674.5	184	Positive	PC	PC	PC 28:2		1.534
+IS PC 40:2	842.7	184	Positive	PC	PC	PC 40:2		1.756
+IS PC 44:2	898.7	184	Positive	PC	PC	PC 44:2		1.837
+___Internal Standard Information								
+Use reference peaks for all tests:	0							
+___Target Lipid Information								
+PC O-30:2	688.5	184	Positive	PC	PC	PC O-30:2		1.566
+PC O-30:1	690.5	184	Positive	PC	PC	PC O-30:1		1.566
+PC O-30:0	692.5	184	Positive	PC	PC	PC O-30:0		1.566
+PC 30:2	702.5	184	Positive	PC	PC	PC 30:2		1.569
+PC 30:1	704.6	184	Positive	PC	PC	PC 30:1		1.569
+PC 30:0	706.5	184	Positive	PC	PC	PC 30:0		1.57
+PC O-32:2	716.5	184	Positive	PC	PC	PC O-32:2		1.601
+PC O-32:1	718.6	184	Positive	PC	PC	PC O-32:1		1.601
+PC O-32:0	720.6	184	Positive	PC	PC	PC O-32:0		1.602
+PC 32:3	728.5	184	Positive	PC	PC	PC 32:3		1.604
+PC 32:2	730.6	184	Positive	PC	PC	PC 32:2		1.605
+PC 32:1	732.6	184	Positive	PC	PC	PC 32:1		1.605
+PC 32:0	734.6	184	Positive	PC	PC	PC 32:0		1.605
+PC O-34:3	742.5	184	Positive	PC	PC	PC O-34:3		1.637
+PC O-34:2	744.6	184	Positive	PC	PC	PC O-34:2		1.638
+PC O-34:1	746.6	184	Positive	PC	PC	PC O-34:1		1.638
+PC O-34:0	748.6	184	Positive	PC	PC	PC O-34:0		1.638
+PC 34:3	756.6	184	Positive	PC	PC	PC 34:3		1.641
+PC 34:2	758.6	184	Positive	PC	PC	PC 34:2		1.641
+PC 34:1	760.6	184	Positive	PC	PC	PC 34:1		1.642
+PC 34:0	762.6	184	Positive	PC	PC	PC 34:0		1.642
+PC O-36:6	764.6	184	Positive	PC	PC	PC O-36:6		1.674
+PC O-36:5	766.6	184	Positive	PC	PC	PC O-36:5		1.674
+PC O-36:4	768.6	184	Positive	PC	PC	PC O-36:4		1.674
+PC O-36:3	770.6	184	Positive	PC	PC	PC O-36:3		1.675
+PC O-36:2	772.6	184	Positive	PC	PC	PC O-36:2		1.675
+PC O-36:1	774.6	184	Positive	PC	PC	PC O-36:1		1.675
+PC O-36:0	776.6	184	Positive	PC	PC	PC O-36:0		1.676
+PC 36:6	778.6	184	Positive	PC	PC	PC 36:6		1.677
+PC 36:5	780.6	184	Positive	PC	PC	PC 36:5		1.678
+PC 36:4	782.6	184	Positive	PC	PC	PC 36:4		1.678
+PC 36:3	784.6	184	Positive	PC	PC	PC 36:3		1.678
+PC 36:2	786.6	184	Positive	PC	PC	PC 36:2		1.679
+PC 36:1	788.6	184	Positive	PC	PC	PC 36:1		1.679
+PC 36:0	790.6	184	Positive	PC	PC	PC 36:0		1.679
+PC O-38:6	792.6	184	Positive	PC	PC	PC O-38:6		1.712
+PC O-38:5	794.6	184	Positive	PC	PC	PC O-38:5		1.712
+PC O-38:4	796.6	184	Positive	PC	PC	PC O-38:4		1.712
+PC O-38:3	798.6	184	Positive	PC	PC	PC O-38:3		1.713
+PC O-38:2	800.6	184	Positive	PC	PC	PC O-38:2		1.713
+PC O-38:1	802.6	184	Positive	PC	PC	PC O-38:1		1.713
+PC 38:7	804.6	184	Positive	PC	PC	PC 38:7		1.715
+PC 38:6	806.6	184	Positive	PC	PC	PC 38:6		1.715
+PC 38:5	808.6	184	Positive	PC	PC	PC 38:5		1.716
+PC 38:4	810.6	184	Positive	PC	PC	PC 38:4		1.716
+PC 38:3	812.6	184	Positive	PC	PC	PC 38:3		1.716
+PC 38:2	814.6	184	Positive	PC	PC	PC 38:2		1.717
+PC 38:1	816.7	184	Positive	PC	PC	PC 38:1		1.717
+PC 38:0	818.6	184	Positive	PC	PC	PC 38:0		1.718
+PC O-40:1	830.7	184	Positive	PC	PC	PC O-40:1		1.752
+PC 40:7	832.6	184	Positive	PC	PC	PC 40:7		1.754
+PC 40:6	834.6	184	Positive	PC	PC	PC 40:6		1.755
+PC 40:5	836.6	184	Positive	PC	PC	PC 40:5		1.755
+PC 40:4	838.6	184	Positive	PC	PC	PC 40:4		1.755
+___Processing Information								
+Units for Internal standard	ng							
+Units for Results								
+End Of Target Lipid List
+Lipid Types	0123
+Combine Periods	0
+Process Just Selected Periods	0
+Index of Selected Periods	
+Positive Polarity	1
+Internal Standards Unit	uM
+Spectral Peaks Fragment File	C:\Program Files (x86)\AB SCIEX\LipidView Software\LV Program Files\Fragments_pos.txt
+Fragment Mass Tolerance	0.3
+Spectral Peaks Smooth	0
+Spectral Peaks Times Noise	0
+Spectral Peaks Avg Replicate Data	0

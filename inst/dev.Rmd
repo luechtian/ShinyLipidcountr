@@ -823,3 +823,26 @@ data2 <- data %>% filter(!species %in% false_pos$chemical_species)
                                             class = "dropdown")
 ```
 
+```{r}
+uM_data_2 <- data %>%
+        dplyr::mutate(include = TRUE)
+
+lipid_species_data <- uM_data_2 %>%                                             # uM_data_2 = uM_data_2$data
+        dplyr::select(class, species, include) %>%
+        dplyr::filter(class == "CE") %>%                                        # "PC = input$class
+        unique() %>%
+        dplyr::mutate(species = as.character(species))
+
+lipid_species_data$include[lipid_species_data$species == "14:1"] <- TRUE
+
+uM_data_2 <- uM_data_2 %>%
+  dplyr::left_join(lipid_species_data, by = c("class", "species")) %>%
+  dplyr::mutate(include.y = ifelse(is.na(include.y), "", include.y),
+                include = ifelse(include.y != "", include.y, include.x),
+                include = as.logical(include),
+                species = as.factor(species)) %>%
+  dplyr::select(-include.x, -include.y) %>% 
+  dplyr::distinct(class, species, include)
+
+```
+

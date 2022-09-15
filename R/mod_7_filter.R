@@ -36,7 +36,7 @@ mod_7_filter_ui <- function(id, tabName){
                             ),
                             shinydashboard::box(
                               rhandsontable::rHandsontableOutput(ns("sample_check"),  height = 480),
-                              width = 2, height = 550, title = "Samples"
+                              width = 3, height = 550, title = "Samples"
                             ),
                             shinydashboard::box(
                               rhandsontable::rHandsontableOutput(ns("class_check"), height = 480),
@@ -44,7 +44,11 @@ mod_7_filter_ui <- function(id, tabName){
                             ),
                             shinydashboard::box(
                               rhandsontable::rHandsontableOutput(ns("species_check"), height = 480),
-                              width = 2, height = 550, title = "Lipid species"
+                              width = 3, height = 550, title = "Lipid species"
+                            ),
+                            shinydashboard::box(
+                              rhandsontable::rHandsontableOutput(ns("excluded_species"), height = 480),
+                              width = 2, height = 550, title = "Excluded species"
                             )
                           ),
 
@@ -69,51 +73,93 @@ mod_7_filter_server <- function(id, uM_data){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
+    # Reactive values ----
     uM_data_2 <- reactiveValues()
 
+    samples <- reactiveValues(data = data.frame())
+
+    classes <- reactiveValues(data = data.frame())
+
+    lipid_species <- reactiveValues(data = data.frame())
+
+    # Reload/Reset logic ----
     observeEvent(input$refresh,{
 
       updateSelectInput(session = session,
                         inputId = "class",
                         choices = unique(uM_data()$class))
 
-      uM_data_2$data <- uM_data()
+      uM_data_2$data <- uM_data() %>%
+        dplyr::mutate(include = TRUE)
+
+      uM_data_2$species <- uM_data() %>%
+        dplyr::mutate(include = TRUE)
+
+      # Sample selection ----
+      output$sample_check <- rhandsontable::renderRHandsontable({
+
+        rhandsontable::rhandsontable(
+          uM_data_2$data %>%
+            dplyr::select(sample, group, include) %>%
+            unique() %>%
+            dplyr::mutate(sample = as.character(sample),
+                          group = as.character(group))
+        ) %>%
+          rhandsontable::hot_cols(manualColumnResize = TRUE) %>%
+          rhandsontable::hot_col("sample", readOnly = TRUE) %>%
+          rhandsontable::hot_col("group", readOnly = TRUE)
+
+      })
+
+      samples$data <- uM_data_2$data %>%
+        dplyr::select(sample, group, include) %>%
+        unique() %>%
+        dplyr::mutate(sample = as.character(sample),
+                      group = as.character(group))
+
+      # Class selection ----
+      output$class_check <- rhandsontable::renderRHandsontable({
+
+        rhandsontable::rhandsontable(
+          uM_data_2$data %>%
+            dplyr::select(class, include) %>%
+            unique()
+        ) %>%
+          rhandsontable::hot_col("class", readOnly = TRUE)
+
+      })
+
+      classes$data <- uM_data_2$data %>%
+        dplyr::select(class, include) %>%
+        unique()
+
+      # Lipid species selection ----
+      output$species_check <- rhandsontable::renderRHandsontable({
+
+        rhandsontable::rhandsontable(
+          uM_data_2$species %>%
+            dplyr::select(class, species, include) %>%
+            dplyr::filter(class == input$class) %>%
+            unique() %>%
+            dplyr::mutate(species = as.character(species))
+        ) %>%
+          rhandsontable::hot_col("class", readOnly = TRUE) %>%
+          rhandsontable::hot_col("species", readOnly = TRUE)
+
+      })
+
+      lipid_species$data <- uM_data_2$species %>%
+        dplyr::select(class, species, include) %>%
+        dplyr::filter(class == input$class) %>%
+        unique() %>%
+        dplyr::mutate(species = as.character(species))
+
     })
 
-    # Sample selection ----
-    samples <- reactiveValues(data = data.frame())
-
-    output$sample_check <- rhandsontable::renderRHandsontable({
-
-      rhandsontable::rhandsontable(
-        uM_data() %>%
-          dplyr::select(sample, group) %>%
-          unique() %>%
-          dplyr::mutate(include = TRUE,
-                        sample = as.character(sample),
-                        group = as.character(group))
-      ) %>%
-        rhandsontable::hot_cols(manualColumnResize = TRUE)
-
-    })
-
+    # Changes in rhandsontables ----
     observeEvent(input$sample_check$changes$changes,{
 
       samples$data <- rhandsontable::hot_to_r(input$sample_check)
-
-    })
-
-    # Class selection ----
-    classes <- reactiveValues(data = data.frame())
-
-    output$class_check <- rhandsontable::renderRHandsontable({
-
-      rhandsontable::rhandsontable(
-        uM_data() %>%
-          dplyr::select(class) %>%
-          unique() %>%
-          dplyr::mutate(include = TRUE)
-      )
 
     })
 
@@ -123,33 +169,14 @@ mod_7_filter_server <- function(id, uM_data){
 
     })
 
-    # Lipid species selection ----
-    lipid_species <- reactiveValues(data = data.frame())
-
-    output$species_check <- rhandsontable::renderRHandsontable({
-
-      rhandsontable::rhandsontable(
-        uM_data() %>%
-          dplyr::select(class, species) %>%
-          dplyr::filter(class == input$class) %>%
-          unique() %>%
-          dplyr::mutate(include = TRUE,
-                        species = as.character(species))
-      )
-
-    })
-
     observeEvent(input$species_check$changes$changes,{
 
       lipid_species$data <- rhandsontable::hot_to_r(input$species_check)
 
     })
 
-    # edit_data logic ----
-    observeEvent(input$edit_data,{
+    plot_data <- eventReactive(input$edit_data,{
 
-      if(all(samples$data$include & classes$data$include & lipid_species$data$include)) { uM_data_2$data }
-      else {
         ignore_samples <- samples$data %>%
           dplyr::filter(include == FALSE) %>%
           dplyr::pull(sample)
@@ -158,17 +185,41 @@ mod_7_filter_server <- function(id, uM_data){
           dplyr::filter(include == FALSE) %>%
           dplyr::pull(class)
 
-        ignore_lipid_species <- lipid_species$data %>%
+        ignore_lipid_species <- uM_data_2$species %>%
           dplyr::filter(include == FALSE) %>%
           dplyr::pull(species)
 
-        uM_data_2$data <- uM_data_2$data %>%
+        uM_data_2$data %>%
           dplyr::filter(!sample %in% ignore_samples,
                         !class %in% ignore_classes,
                         !species %in% ignore_lipid_species)
 
-        return(uM_data_2$data)
-      }
+    })
+
+    observeEvent(input$edit_data,{
+
+      uM_data_2$species <- uM_data_2$species %>%
+        dplyr::left_join(lipid_species$data, by = c("class", "species")) %>%
+        dplyr::mutate(include.y = ifelse(is.na(include.y), "", include.y),
+                      include = ifelse(include.y != "", include.y, include.x),
+                      include = as.logical(include),
+                      species = as.factor(species)) %>%
+        dplyr::select(-include.x, -include.y)
+
+      output$excluded_species <- rhandsontable::renderRHandsontable({
+
+        rhandsontable::rhandsontable(
+          uM_data_2$species %>%
+            dplyr::filter(include == FALSE) %>%
+            dplyr::select(class, species) %>%
+            unique() %>%
+            dplyr::mutate(species = as.character(species))
+        ) %>%
+          rhandsontable::hot_col("class", readOnly = TRUE) %>%
+          rhandsontable::hot_col("species", readOnly = TRUE)
+
+      })
+
     })
 
 
@@ -176,11 +227,8 @@ mod_7_filter_server <- function(id, uM_data){
     output$species_plot <- plotly::renderPlotly({
       req(input$edit_data)
 
-      plot_data <- as.data.frame(uM_data_2$data)
-
-      species_plot(plot_data, input$class)
-
-      plotly::ggplotly(species_plot(plot_data, input$class, input$plot_threshold, input$errorbar), tooltip = "text") %>%
+      plotly::ggplotly(species_plot(plot_data(), input$class, input$plot_threshold, input$errorbar),
+                       tooltip = "text") %>%
         plotly::style(
           marker.size = input$point_size,
           marker.line = list(width = 0.5)) %>%
@@ -194,9 +242,7 @@ mod_7_filter_server <- function(id, uM_data){
     output$class_plot <- plotly::renderPlotly({
       req(input$edit_data)
 
-      plot_data2 <- as.data.frame(uM_data_2$data)
-
-        plotly::ggplotly(class_plot(plot_data2, input$errorbar), tooltip = "text") %>%
+        plotly::ggplotly(class_plot(plot_data(), input$errorbar), tooltip = "text") %>%
           plotly::style(
             marker.size = input$point_size,
             marker.line = list(width = 0.5)) %>%
@@ -207,7 +253,7 @@ mod_7_filter_server <- function(id, uM_data){
 
     })
 
-    list(data = reactive(uM_data_2$data))
+    list(data = plot_data) #reactive(uM_data_2$data)
 
 })
 }

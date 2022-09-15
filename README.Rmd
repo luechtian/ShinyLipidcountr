@@ -40,7 +40,7 @@ For LipidView-output, use target lists and only the "MarkerView" export option i
 ## 
 
 A LipidView-textfile in a spreadsheet looks like this:
-<img src='man/figures/lv_table.png' /></a>
+<img src='man/figures/lv_table.PNG' /></a>
 
 
 
